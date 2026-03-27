@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>⚡ OT Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#080d14;--surf:#0e1520;--card:#131e2e;--border:#1e2d42;
+  --text:#dce8f5;--muted:#5a7090;--accent:#3d8ef0;
+  --green:#20c472;--red:#e84545;--yellow:#f0a500;--purple:#8b5cf6;
+  --mono:'JetBrains Mono',monospace;--sans:'Space Grotesk',sans-serif;
+  --r:14px;--sb:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16px;overflow-x:hidden;}
+
+.hdr{position:sticky;top:0;z-index:100;background:var(--surf);border-bottom:1px solid var(--border);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;}
+.hdr-logo{font-size:20px;font-weight:700;color:var(--accent);}
+.hdr-time{font-family:var(--mono);font-size:15px;color:var(--muted);font-weight:600;}
+
+.tabs{display:flex;background:var(--surf);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;padding:0 4px;}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;padding:14px 18px;font-size:15px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s;}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+.page{display:none;padding:16px;padding-bottom:calc(24px + var(--sb));}
+.page.active{display:block;}
+
+.cand-card{background:linear-gradient(135deg,#0d1f38,#111c30);border:1px solid #1e3a5f;border-radius:var(--r);padding:18px;margin-bottom:14px;}
+.cand-name{font-size:22px;font-weight:700;color:var(--accent);margin-bottom:12px;}
+.cand-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1a2a40;font-size:15px;}
+.cand-row:last-child{border-bottom:none;}
+.cand-label{color:var(--muted);font-weight:500;}
+.cand-val{font-family:var(--mono);font-size:15px;color:var(--text);font-weight:600;}
+.badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:13px;font-weight:700;}
+.badge-aaj{background:#0d2e1a;color:var(--green);border:1px solid #1a4a2a;}
+.badge-kal{background:#2e1f00;color:var(--yellow);border:1px solid #4a3300;}
+
+.status-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px;font-size:15px;line-height:1.75;white-space:pre-wrap;color:var(--text);}
+.no-short{background:#0a1f12;border:1px solid #1a3a22;border-radius:var(--r);padding:16px 18px;margin-bottom:14px;color:var(--green);font-size:16px;font-weight:600;}
+
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.btn{padding:16px 10px;border-radius:var(--r);border:none;font-family:var(--sans);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:transform .1s,opacity .15s;}
+.btn:active{transform:scale(0.95);opacity:.8;}
+.btn-accept{background:#0d2e1a;color:var(--green);border:1px solid #1c4a2c;}
+.btn-refuse{background:#2e0d0d;color:var(--red);border:1px solid #4a1c1c;}
+.btn-skip{background:var(--card);color:var(--muted);border:1px solid var(--border);}
+.btn-ghost{background:var(--card);color:var(--muted);border:1px solid var(--border);}
+.btn-blue{background:#0d1f3a;color:var(--accent);border:1px solid #1c3a6a;}
+.btn-full{width:100%;padding:17px;font-size:17px;margin-bottom:10px;}
+.btn-gf{background:#0d2e1a;color:var(--green);border:1px solid #1c4a2c;}
+
+.sblock{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:12px;}
+.shdr{padding:13px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+.shdr-name{font-size:17px;font-weight:700;}
+.shdr-cnt{font-size:14px;color:var(--muted);font-family:var(--mono);}
+.s1{color:#3d8ef0;}.s2{color:#20c472;}.s3{color:#f0a500;}.sr{color:#5a7090;}
+.sbody{padding:12px 16px;display:flex;flex-wrap:wrap;gap:8px;}
+.chip{padding:7px 14px;border-radius:20px;font-size:14px;font-weight:600;background:var(--surf);border:1px solid var(--border);color:var(--text);}
+.chip.ot{border-color:var(--accent);color:var(--accent);background:#0a1625;}
+.chip.mutual{border-color:var(--purple);color:var(--purple);background:#120d20;}
+.chip.leave{border-color:var(--yellow);color:var(--yellow);background:#1a1200;text-decoration:line-through;opacity:.75;}
+.no-emp{color:var(--muted);font-size:14px;}
+
+.hdate{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:12px 0 6px;}
+.hitem{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 15px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+.hico{font-size:22px;min-width:28px;text-align:center;}
+.hname{font-size:16px;font-weight:600;color:var(--text);}
+.hmeta{font-size:13px;color:var(--muted);margin-top:3px;font-family:var(--mono);}
+
+.fcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px;}
+.ftitle{font-size:18px;font-weight:700;color:var(--text);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.flabel{display:block;font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px;}
+.finput,.fselect{width:100%;background:var(--surf);border:1.5px solid var(--border);border-radius:10px;padding:14px 15px;color:var(--text);font-family:var(--sans);font-size:16px;margin-bottom:14px;outline:none;-webkit-appearance:none;transition:border-color .2s;}
+.finput:focus,.fselect:focus{border-color:var(--accent);}
+.fselect option{background:#131e2e;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fwarn{display:none;color:var(--red);font-size:14px;margin-bottom:12px;padding:10px 13px;background:#2e0d0d;border-radius:8px;border:1px solid #4a1c1c;}
+
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;align-items:flex-end;justify-content:center;}
+.modal.open{display:flex;}
+.mbox{background:var(--card);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:22px 18px calc(22px + var(--sb));width:100%;max-width:480px;}
+.mtitle{font-size:18px;font-weight:700;margin-bottom:14px;color:var(--text);}
+.minfo{background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:14px 15px;margin-bottom:18px;font-family:var(--mono);font-size:14px;line-height:1.9;color:var(--text);white-space:pre-wrap;}
+.mbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mok{background:var(--green);color:#061409;font-family:var(--sans);font-size:16px;font-weight:700;border:none;padding:16px;border-radius:12px;cursor:pointer;}
+.mcancel{background:var(--card);color:var(--muted);font-family:var(--sans);font-size:16px;font-weight:600;border:1px solid var(--border);padding:16px;border-radius:12px;cursor:pointer;}
+
+#toast{position:fixed;bottom:calc(20px + var(--sb));left:50%;transform:translateX(-50%) translateY(120px);background:var(--card);border:1px solid var(--accent);color:var(--accent);padding:13px 24px;border-radius:30px;font-size:15px;font-weight:600;z-index:999;transition:transform .3s;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.5);}
+#toast.show{transform:translateX(-50%) translateY(0);}
+#toast.err{border-color:var(--red);color:var(--red);}
+
+.loader{display:flex;align-items:center;justify-content:center;padding:40px 20px;color:var(--muted);font-size:15px;gap:10px;}
+.spin{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:15px;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-logo">⚡ OT Dashboard</div>
+  <div class="hdr-time" id="clock">--:--</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="goTab('dashboard')">Dashboard</div>
+  <div class="tab" onclick="goTab('today')">Today</div>
+  <div class="tab" onclick="goTab('tomorrow')">Tomorrow</div>
+  <div class="tab" onclick="goTab('history')">History</div>
+  <div class="tab" onclick="goTab('leave')">Leave</div>
+  <div class="tab" onclick="goTab('mutual')">Mutual</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="pg-dashboard" class="page active">
+  <div id="cand-card" class="cand-card" style="display:none">
+    <div class="cand-name" id="c-name">—</div>
+    <div class="cand-row"><span class="cand-label">Aaj ka Shift</span><span class="cand-val" id="c-shift">—</span></div>
+    <div class="cand-row"><span class="cand-label">OT Shift</span><span class="cand-val" id="c-otshift">—</span></div>
+    <div class="cand-row"><span class="cand-label">OT Date</span><span class="cand-val"><span id="c-date">—</span> &nbsp;<span id="c-badge" class="badge">—</span></span></div>
+  </div>
+  <div id="no-short" class="no-short" style="display:none">✅ Koi shortage nahi. Sab shifts full hain.</div>
+  <div id="ot-status" class="status-box">Loading...</div>
+  <div class="g3">
+    <button class="btn btn-accept" onclick="openModal('accept')">✅ Accept</button>
+    <button class="btn btn-refuse" onclick="openModal('refuse')">❌ Refuse</button>
+    <button class="btn btn-skip"   onclick="openModal('skip')">⏭ Skip</button>
+  </div>
+  <div class="g2">
+    <button class="btn btn-ghost" onclick="loadDash()">🔄 Refresh</button>
+    <button class="btn btn-blue"  onclick="goTab('today')">📅 Today</button>
+  </div>
+</div>
+
+<!-- TODAY -->
+<div id="pg-today" class="page">
+  <div id="today-body"><div class="loader"><div class="spin"></div>Loading...</div></div>
+  <button class="btn btn-ghost btn-full" style="margin-top:6px" onclick="loadToday()">🔄 Refresh</button>
+</div>
+
+<!-- TOMORROW -->
+<div id="pg-tomorrow" class="page">
+  <div id="tmr-body"><div class="loader"><div class="spin"></div>Loading...</div></div>
+  <button class="btn btn-ghost btn-full" style="margin-top:6px" onclick="loadTmr()">🔄 Refresh</button>
+</div>
+
+<!-- HISTORY -->
+<div id="pg-history" class="page">
+  <div id="hist-body"><div class="loader"><div class="spin"></div>Loading...</div></div>
+</div>
+
+<!-- LEAVE -->
+<div id="pg-leave" class="page">
+  <div class="fcard">
+    <div class="ftitle">📝 Leave Entry</div>
+    <label class="flabel">Employee</label>
+    <select id="l-name" class="fselect"></select>
+    <div class="frow">
+      <div><label class="flabel">From Date</label><input type="date" id="l-from" class="finput"></div>
+      <div><label class="flabel">To Date</label><input type="date" id="l-to" class="finput"></div>
+    </div>
+    <label class="flabel">Reason (Optional)</label>
+    <input type="text" id="l-reason" class="finput" placeholder="e.g. Medical, Personal...">
+    <button class="btn btn-gf btn-full" onclick="submitLeave()">✅ Submit Leave</button>
+  </div>
+</div>
+
+<!-- MUTUAL -->
+<div id="pg-mutual" class="page">
+  <div class="fcard">
+    <div class="ftitle">🔄 Mutual Duty Swap</div>
+    <label class="flabel">Employee 1</label>
+    <select id="m-e1" class="fselect" onchange="chkEmps()"></select>
+    <label class="flabel">Employee 2</label>
+    <select id="m-e2" class="fselect" onchange="chkEmps()"></select>
+    <div id="m-warn" class="fwarn">⚠️ Dono employee alag hone chahiye</div>
+    <label class="flabel">Swap Date</label>
+    <input type="date" id="m-date" class="finput">
+    <button class="btn btn-gf btn-full" onclick="submitMutual()">✅ Submit Mutual</button>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+  <div class="mbox">
+    <div class="mtitle" id="m-title">Confirm?</div>
+    <div class="minfo"  id="m-info">—</div>
+    <div class="mbtns">
+      <button class="mcancel" onclick="closeModal()">Cancel</button>
+      <button class="mok"     id="m-ok">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbzYfaX_L87sP54KB2cdvMH7IT7qxnIctTKiDTKqinjdDMR-v7169zMOhwWX8hmFGLNqRQ/exec";
+
+let _next=null, _emps=[], _todayDone=false, _tmrDone=false, _histDone=false;
+
+// Clock
+function tick(){const n=new Date();document.getElementById('clock').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
+setInterval(tick,1000);tick();
+
+// Tabs
+const TABS=['dashboard','today','tomorrow','history','leave','mutual'];
+function goTab(name){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',TABS[i]===name));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pg-'+name).classList.add('active');
+  if(name==='today'&&!_todayDone)loadToday();
+  if(name==='tomorrow'&&!_tmrDone)loadTmr();
+  if(name==='history'&&!_histDone)loadHist();
+}
+
+// Toast
+function toast(msg,isErr){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=isErr?'err show':'show';
+  setTimeout(()=>t.className='',3000);
+}
+
+// Dashboard
+async function loadDash(){
+  document.getElementById('ot-status').textContent='Loading...';
+  try{
+    const[otR,nxR]=await Promise.all([
+      fetch(API+'?action=getOT').then(r=>r.json()),
+      fetch(API+'?action=getNext').then(r=>r.json())
+    ]);
+    document.getElementById('ot-status').textContent=otR.message||'—';
+    _next=nxR;
+    if(nxR.shortage){
+      document.getElementById('no-short').style.display='none';
+      document.getElementById('cand-card').style.display='block';
+      document.getElementById('c-name').textContent=nxR.name;
+      document.getElementById('c-shift').textContent=nxR.todayShift||'—';
+      document.getElementById('c-otshift').textContent=nxR.otShift||'—';
+      document.getElementById('c-date').textContent=nxR.otDate||'—';
+      const b=document.getElementById('c-badge');
+      b.textContent=nxR.otDay||'—';
+      b.className='badge '+(nxR.otDay==='Aaj'?'badge-aaj':'badge-kal');
+    }else{
+      document.getElementById('cand-card').style.display='none';
+      document.getElementById('no-short').style.display='block';
+    }
+  }catch(e){document.getElementById('ot-status').textContent='⚠️ Load failed. Check URL.';}
+}
+
+// Today
+async function loadToday(){
+  _todayDone=true;
+  document.getElementById('today-body').innerHTML='<div class="loader"><div class="spin"></div>Loading...</div>';
+  try{
+    const r=await fetch(API+'?action=todayWeb').then(r=>r.json());
+    if(!r.ok||!r.shifts)throw new Error();
+    const L={
+      '1st':{cls:'s1',icon:'🌅',label:'1st Shift'},
+      '2nd':{cls:'s2',icon:'☀️',label:'2nd Shift'},
+      '3rd':{cls:'s3',icon:'🌙',label:'3rd Shift'},
+      'REST':{cls:'sr',icon:'🛌',label:'Rest Day'}
+    };
+    let h='';
+    for(const k of['1st','2nd','3rd','REST']){
+      const emps=r.shifts[k]||[],l=L[k];
+      const chips=emps.length?emps.map(n=>{
+        const c=n.includes('(OT)')?'ot':n.includes('(Mutual)')?'mutual':n.includes('(Leave)')?'leave':'';
+        return`<span class="chip ${c}">${esc(n)}</span>`;
+      }).join(''):'<span class="no-emp">Koi nahi</span>';
+      h+=`<div class="sblock"><div class="shdr"><span class="shdr-name ${l.cls}">${l.icon} ${l.label}</span><span class="shdr-cnt">${emps.length} emp</span></div><div class="sbody">${chips}</div></div>`;
+    }
+    document.getElementById('today-body').innerHTML=h;
+  }catch(e){document.getElementById('today-body').innerHTML='<div class="empty">⚠️ Load failed</div>';}
+}
+
+// Tomorrow
+async function loadTmr(){
+  _tmrDone=true;
+  document.getElementById('tmr-body').innerHTML='<div class="loader"><div class="spin"></div>Loading...</div>';
+  try{
+    const r=await fetch(API+'?action=tomorrowWeb').then(r=>r.json());
+    if(!r.ok)throw new Error();
+    document.getElementById('tmr-body').innerHTML=`<div class="status-box">${esc(r.text||'—')}</div>`;
+  }catch(e){document.getElementById('tmr-body').innerHTML='<div class="empty">⚠️ Load failed</div>';}
+}
+
+// History
+async function loadHist(){
+  _histDone=true;
+  document.getElementById('hist-body').innerHTML='<div class="loader"><div class="spin"></div>Loading...</div>';
+  try{
+    const r=await fetch(API+'?action=historyWeb').then(r=>r.json());
+    if(!r.ok||!r.records.length){document.getElementById('hist-body').innerHTML='<div class="empty">📭 Koi OT record nahi (±7 days)</div>';return;}
+    const icons={'Accept':'✅','OT Assigned':'✅','Refuse':'❌','Skip (Same Shift)':'⏭','Lapse (Leave)':'🏥'};
+    const today=new Date();today.setHours(0,0,0,0);
+    const ts=fmt(today);
+    let h='<div style="padding:0">';let ld='';
+    for(const rec of r.records){
+      if(rec.date!==ld){
+        const tag=rec.date===ts?' 🔵 Aaj':rec.ts<today.getTime()?' (Past)':' (Upcoming)';
+        h+=`<div class="hdate">📅 ${esc(rec.date)}${tag}</div>`;ld=rec.date;
+      }
+      h+=`<div class="hitem"><div class="hico">${icons[rec.action]||'📌'}</div><div><div class="hname">${esc(rec.name)}</div><div class="hmeta">${esc(rec.shift)} · ${esc(rec.action)}</div></div></div>`;
+    }
+    h+='</div>';
+    document.getElementById('hist-body').innerHTML=h;
+  }catch(e){document.getElementById('hist-body').innerHTML='<div class="empty">⚠️ Load failed</div>';}
+}
+
+// Modal
+function openModal(type){
+  if(type==='accept'&&!_next?.shortage){toast('Koi shortage nahi hai!',true);return;}
+  const titles={accept:'✅ OT Accept?',refuse:'❌ OT Refuse?',skip:'⏭ Skip karna hai?'};
+  document.getElementById('m-title').textContent=titles[type];
+  let info='';
+  if(type==='accept'&&_next?.shortage){
+    info=`👤  ${_next.name}\n🕐  Today Shift: ${_next.todayShift}\n⚡  OT Shift: ${_next.otShift}\n📅  OT Date: ${_next.otDate} (${_next.otDay})`;
+  }else{
+    info=type==='refuse'?'Is employee ko refuse karna hai?':'Is employee ko skip karna hai?';
+  }
+  document.getElementById('m-info').textContent=info;
+  document.getElementById('m-ok').onclick=()=>doAction(type);
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+async function doAction(type){
+  closeModal();
+  try{
+    const r=await fetch(API+'?action='+type).then(r=>r.json());
+    if(r.ok){toast(r.msg||'✅ Done!');_next=null;_todayDone=false;setTimeout(loadDash,1500);}
+    else toast(r.msg||'Error!',true);
+  }catch(e){toast('Network error!',true);}
+}
+
+// Employees
+async function loadEmps(){
+  try{
+    _emps=await fetch(API+'?action=empList').then(r=>r.json());
+    const opts=_emps.map(e=>`<option value="${escA(e.name)}">${esc(e.name)}</option>`).join('');
+    ['l-name','m-e1','m-e2'].forEach(id=>{document.getElementById(id).innerHTML=opts;});
+  }catch(e){}
+}
+
+// Leave
+async function submitLeave(){
+  const name=document.getElementById('l-name').value;
+  const from=document.getElementById('l-from').value;
+  const to=document.getElementById('l-to').value;
+  const reason=document.getElementById('l-reason').value;
+  if(!name||!from||!to){toast('Sab fields bharo!',true);return;}
+  if(from>to){toast('From date, To se badi nahi ho sakti!',true);return;}
+  const emp=_emps.find(e=>e.name===name);
+  try{
+    const r=await fetch(`${API}?action=leaveWeb&name=${enc(name)}&uec=${enc(emp?.uec||'')}&from=${from}&to=${to}&reason=${enc(reason)}`).then(r=>r.json());
+    if(r.ok){toast(r.msg||'✅ Leave submit ho gaya!');document.getElementById('l-from').value='';document.getElementById('l-to').value='';document.getElementById('l-reason').value='';}
+    else toast(r.msg||'Error!',true);
+  }catch(e){toast('Network error!',true);}
+}
+
+// Mutual
+function chkEmps(){document.getElementById('m-warn').style.display=document.getElementById('m-e1').value===document.getElementById('m-e2').value?'block':'none';}
+async function submitMutual(){
+  const e1=document.getElementById('m-e1').value;
+  const e2=document.getElementById('m-e2').value;
+  const date=document.getElementById('m-date').value;
+  if(e1===e2){toast('Dono employee alag hone chahiye!',true);return;}
+  if(!date){toast('Date select karo!',true);return;}
+  try{
+    const r=await fetch(`${API}?action=mutualWeb&emp1=${enc(e1)}&emp2=${enc(e2)}&date=${date}`).then(r=>r.json());
+    if(r.ok){toast(r.msg||'✅ Mutual submit ho gaya!');document.getElementById('m-date').value='';}
+    else toast(r.msg||'Error!',true);
+  }catch(e){toast('Network error!',true);}
+}
+
+// Utils
+function enc(s){return encodeURIComponent(s||'');}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escA(s){return(s||'').replace(/"/g,'&quot;');}
+function fmt(d){return String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear();}
+function setDates(){const t=new Date().toISOString().split('T')[0];document.getElementById('l-from').value=t;document.getElementById('l-to').value=t;document.getElementById('m-date').value=t;}
+
+// Init
+loadDash();loadEmps();setDates();
+</script>
+</body>
+</html>
