@@ -17,7 +17,6 @@
 }
 body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;padding:0 0 80px 0;font-size:16px;}
 
-/* OFFLINE BAR */
 #offline-bar{display:none;background:#3a1a1a;border-bottom:1px solid #5c2323;padding:8px 16px;text-align:center;font-size:13px;color:var(--red);font-weight:600;}
 #offline-bar.show{display:block;}
 
@@ -39,15 +38,20 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
 .action-row.two{grid-template-columns:1fr 1fr;}
 .btn{padding:16px 8px;border-radius:12px;border:none;font-family:var(--sans);font-size:16px;font-weight:700;cursor:pointer;transition:opacity .15s,transform .1s;display:flex;align-items:center;justify-content:center;gap:6px;}
 .btn:active{transform:scale(0.95);opacity:.82}
-.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .btn-accept{background:#1a4a2e;color:var(--green);border:1px solid #235c38}
 .btn-refuse{background:#3a1a1a;color:var(--red);border:1px solid #5c2323}
 .btn-skip{background:#2a2a3a;color:var(--muted);border:1px solid var(--border)}
 .btn-refresh{background:var(--card);color:var(--muted);border:1px solid var(--border)}
 .btn-primary{background:#1e3a6e;color:var(--accent);border:1px solid #2a4f94}
-.btn-submit{background:#1a4a2e;color:var(--green);border:1px solid #235c38;width:100%;padding:17px;font-size:17px}
-.btn-del{background:#3a1a1a;color:var(--red);border:1px solid #5c2323;padding:8px 14px;font-size:14px;border-radius:8px;cursor:pointer;font-family:var(--sans);font-weight:600;}
-.btn-del:active{transform:scale(0.95);}
+.btn-submit{background:#1a4a2e;color:var(--green);border:1px solid #235c38;width:100%;padding:17px;font-size:17px;margin-top:4px;}
+.btn-sm{padding:8px 14px;border-radius:8px;font-size:14px;font-weight:600;border:none;cursor:pointer;font-family:var(--sans);}
+.btn-sm:active{transform:scale(0.94);}
+.btn-del{background:#3a1a1a;color:var(--red);border:1px solid #5c2323;}
+.btn-edit{background:#1e3a6e;color:var(--accent);border:1px solid #2a4f94;}
+.btn-spin{position:relative;color:transparent!important;pointer-events:none;}
+.btn-spin::after{content:'';position:absolute;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 .candidate-card{background:linear-gradient(135deg,#1a2a3e,#1a2236);border:1px solid #2a4a6e;border-radius:14px;padding:18px;margin-bottom:14px;}
 .candidate-name{font-size:20px;font-weight:700;color:var(--accent);margin-bottom:12px;}
@@ -67,24 +71,30 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
 .emp-chip.mutual{border-color:#9f7afa;color:#9f7afa;background:#160d2a}
 .emp-chip.leave{border-color:#f5a623;color:#f5a623;background:#1a1200;text-decoration:line-through;opacity:.75}
 
-/* LEAVE / MUTUAL LIST */
-.list-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 15px;margin-bottom:10px;}
-.list-item-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
-.list-item-name{font-size:16px;font-weight:700;color:var(--text);}
-.list-item-meta{font-size:13px;color:var(--muted);font-family:var(--mono);margin-top:4px;}
-.pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;margin-right:6px;}
-.pill-active{background:#1a3a2e;color:var(--green);border:1px solid #235c38}
-.pill-future{background:#1a2a3a;color:var(--accent);border:1px solid #2a4a6e}
-.pill-applied{background:#1a3a2e;color:var(--green);border:1px solid #235c38}
-.pill-approved{background:#1a2a3a;color:var(--accent);border:1px solid #2a4a6e}
-.section-title{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+/* LIST CARDS */
+.list-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 15px;margin-bottom:10px;}
+.list-card-row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.list-card-info{flex:1;min-width:0;}
+.list-card-name{font-size:16px;font-weight:700;color:var(--text);margin-bottom:5px;}
+.list-card-meta{font-size:13px;color:var(--muted);font-family:var(--mono);line-height:1.6;}
+.list-card-actions{display:flex;gap:8px;flex-shrink:0;align-items:center;}
+.pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;}
+.pill-active{background:#1a3a2e;color:var(--green);}
+.pill-future{background:#1a2a3a;color:var(--accent);}
+.pill-applied{background:#1a3a2e;color:var(--green);}
+.pill-approved{background:#1a2a3a;color:var(--accent);}
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.section-hdr-title{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
 
-.hist-entry{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 15px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
-.hist-icon{font-size:22px;min-width:28px;text-align:center}
+/* HISTORY */
+.hist-entry{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 15px;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.hist-icon{font-size:20px;min-width:26px;text-align:center}
+.hist-main{flex:1;min-width:0;}
 .hist-name{font-size:15px;font-weight:700;color:var(--text)}
-.hist-meta{font-size:13px;color:var(--muted);margin-top:3px;font-family:var(--mono)}
+.hist-meta{font-size:13px;color:var(--muted);margin-top:2px;font-family:var(--mono)}
 .hist-date-divider{font-size:13px;font-weight:700;color:var(--muted);padding:10px 0 5px;letter-spacing:.5px;text-transform:uppercase;}
 
+/* FORM */
 .form-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;}
 .form-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
 .form-label{font-size:13px;color:var(--muted);margin-bottom:7px;display:block;font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
@@ -93,27 +103,28 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
 .form-select option{background:#1a2236}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
-/* SPINNER INSIDE BUTTON */
-.btn-loading{position:relative;color:transparent!important;}
-.btn-loading::after{content:'';position:absolute;width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#1a2a3e;border:1px solid var(--accent);color:var(--accent);padding:13px 24px;border-radius:30px;font-size:15px;font-weight:600;z-index:200;transition:transform .3s;white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,.4);}
+/* TOAST */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#1a2a3e;border:1px solid var(--accent);color:var(--accent);padding:13px 24px;border-radius:30px;font-size:15px;font-weight:600;z-index:300;transition:transform .3s;white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,.5);}
 #toast.show{transform:translateX(-50%) translateY(0)}
 #toast.error{border-color:var(--red);color:var(--red)}
 
 .loader{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--muted);font-size:15px;gap:10px;}
 .spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
-.empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:15px;}
+.empty{text-align:center;padding:30px 20px;color:var(--muted);font-size:15px;}
 
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:flex-end;justify-content:center;}
-.modal-overlay.show{display:flex}
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;align-items:flex-end;justify-content:center;}
+.modal.show{display:flex}
 .modal-box{background:var(--card);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:22px 18px 36px;width:100%;max-width:480px;}
 .modal-title{font-size:18px;font-weight:700;margin-bottom:14px;color:var(--text);}
 .modal-info{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 15px;margin-bottom:18px;font-family:var(--mono);font-size:15px;line-height:1.9;color:var(--text);white-space:pre-wrap;}
 .modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.modal-confirm{background:var(--green);color:#061409;font-weight:700;border:none;padding:16px;border-radius:12px;font-size:17px;cursor:pointer;font-family:var(--sans)}
-.modal-cancel{background:var(--card);color:var(--muted);border:1px solid var(--border);padding:16px;border-radius:12px;font-size:16px;cursor:pointer;font-family:var(--sans)}
+.m-ok{background:var(--green);color:#061409;font-weight:700;border:none;padding:16px;border-radius:12px;font-size:17px;cursor:pointer;font-family:var(--sans)}
+.m-cancel{background:var(--card);color:var(--muted);border:1px solid var(--border);padding:16px;border-radius:12px;font-size:16px;cursor:pointer;font-family:var(--sans)}
+.m-del{background:var(--red);color:#fff;font-weight:700;border:none;padding:16px;border-radius:12px;font-size:17px;cursor:pointer;font-family:var(--sans)}
+
+/* EDIT MODAL - full fields */
+.edit-modal-body{max-height:70vh;overflow-y:auto;}
 </style>
 </head>
 <body>
@@ -140,7 +151,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
     <div class="candidate-name" id="cName">—</div>
     <div class="candidate-row"><span>Aaj ka Shift</span><span class="candidate-val" id="cShift">—</span></div>
     <div class="candidate-row"><span>OT Shift</span><span class="candidate-val" id="cOtShift">—</span></div>
-    <div class="candidate-row"><span>OT Date</span><span class="candidate-val"><span id="cOtDate">—</span> &nbsp;<span id="cBadge" class="badge">—</span></span></div>
+    <div class="candidate-row"><span>OT Date</span><span class="candidate-val"><span id="cOtDate">—</span>&nbsp;<span id="cBadge" class="badge">—</span></span></div>
   </div>
   <div id="noShortage" style="display:none;margin-bottom:14px">
     <div style="padding:14px 18px;border-radius:12px;background:#0a1f12;border:1px solid #1a3a22;color:var(--green);font-size:16px;font-weight:600">✅ Koi shortage nahi. Sabka shift full hai.</div>
@@ -169,20 +180,23 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
   <button class="btn btn-refresh" style="width:100%;margin-top:6px" onclick="reloadTomorrow()">🔄 Refresh</button>
 </div>
 
-<!-- HISTORY -->
+<!-- OT HISTORY -->
 <div id="tab-history" class="section">
+  <div class="section-hdr">
+    <span class="section-hdr-title">📊 OT History (±7 days)</span>
+    <button class="btn-sm btn-edit" onclick="reloadHistory()">🔄 Refresh</button>
+  </div>
   <div id="historyContent"><div class="loader"><div class="spinner"></div>Loading...</div></div>
 </div>
 
 <!-- LEAVE -->
 <div id="tab-leave" class="section">
-  <!-- Active/Upcoming Leaves List -->
-  <div id="leaveList" style="margin-bottom:16px">
-    <div class="loader"><div class="spinner"></div>Loading...</div>
+  <div class="section-hdr">
+    <span class="section-hdr-title">📋 Active & Upcoming Leaves</span>
+    <button class="btn-sm btn-edit" onclick="reloadLeaves()">🔄 Refresh</button>
   </div>
-
-  <!-- Submit Form -->
-  <div class="form-card">
+  <div id="leaveList"><div class="loader"><div class="spinner"></div>Loading...</div></div>
+  <div class="form-card" style="margin-top:16px">
     <div class="form-title">📝 Nayi Leave Apply Karo</div>
     <label class="form-label">Employee Name</label>
     <select id="leaveName" class="form-select"></select>
@@ -198,13 +212,12 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
 
 <!-- MUTUAL -->
 <div id="tab-mutual" class="section">
-  <!-- Upcoming Mutuals List -->
-  <div id="mutualList" style="margin-bottom:16px">
-    <div class="loader"><div class="spinner"></div>Loading...</div>
+  <div class="section-hdr">
+    <span class="section-hdr-title">🔄 Upcoming Mutuals</span>
+    <button class="btn-sm btn-edit" onclick="reloadMutuals()">🔄 Refresh</button>
   </div>
-
-  <!-- Submit Form -->
-  <div class="form-card">
+  <div id="mutualList"><div class="loader"><div class="spinner"></div>Loading...</div></div>
+  <div class="form-card" style="margin-top:16px">
     <div class="form-title">🔄 Nayi Mutual Apply Karo</div>
     <label class="form-label">Employee 1</label>
     <select id="mutualEmp1" class="form-select" onchange="validateMutualEmps()"></select>
@@ -217,26 +230,68 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
   </div>
 </div>
 
-<!-- CONFIRM MODAL -->
-<div id="confirmModal" class="modal-overlay">
+<!-- OT CONFIRM MODAL -->
+<div id="confirmModal" class="modal">
   <div class="modal-box">
     <div class="modal-title" id="modalTitle">Confirm?</div>
     <div class="modal-info" id="modalInfo">—</div>
     <div class="modal-btns">
-      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
-      <button class="modal-confirm" id="modalConfirmBtn">Confirm</button>
+      <button class="m-cancel" onclick="closeModal('confirmModal')">Cancel</button>
+      <button class="m-ok" id="modalConfirmBtn">Confirm</button>
     </div>
   </div>
 </div>
 
-<!-- DELETE CONFIRM MODAL -->
-<div id="deleteModal" class="modal-overlay">
+<!-- DELETE MODAL -->
+<div id="deleteModal" class="modal">
   <div class="modal-box">
     <div class="modal-title">🗑️ Delete Confirm?</div>
     <div class="modal-info" id="deleteModalInfo">—</div>
     <div class="modal-btns">
-      <button class="modal-cancel" onclick="closeDeleteModal()">Cancel</button>
-      <button class="modal-confirm" style="background:var(--red);color:#fff" id="deleteConfirmBtn">Delete</button>
+      <button class="m-cancel" onclick="closeModal('deleteModal')">Cancel</button>
+      <button class="m-del" id="deleteConfirmBtn">Delete Karo</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT LEAVE MODAL -->
+<div id="editLeaveModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-title">✏️ Leave Edit Karo</div>
+    <div class="edit-modal-body">
+      <input type="hidden" id="editLeaveId">
+      <label class="form-label">Employee</label>
+      <input type="text" id="editLeaveName" class="form-input" readonly style="opacity:.6">
+      <div class="form-row">
+        <div><label class="form-label">From Date</label><input type="date" id="editLeaveFrom" class="form-input"></div>
+        <div><label class="form-label">To Date</label><input type="date" id="editLeaveTo" class="form-input"></div>
+      </div>
+      <label class="form-label">Reason</label>
+      <input type="text" id="editLeaveReason" class="form-input" placeholder="Reason...">
+    </div>
+    <div class="modal-btns" style="margin-top:14px">
+      <button class="m-cancel" onclick="closeModal('editLeaveModal')">Cancel</button>
+      <button class="m-ok" id="editLeaveSubmitBtn" onclick="submitEditLeave()">✅ Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MUTUAL MODAL -->
+<div id="editMutualModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-title">✏️ Mutual Edit Karo</div>
+    <div class="edit-modal-body">
+      <input type="hidden" id="editMutualId">
+      <label class="form-label">Employee 1</label>
+      <input type="text" id="editMutualEmp1" class="form-input" readonly style="opacity:.6">
+      <label class="form-label">Employee 2</label>
+      <input type="text" id="editMutualEmp2" class="form-input" readonly style="opacity:.6">
+      <label class="form-label">New Date</label>
+      <input type="date" id="editMutualDate" class="form-input">
+    </div>
+    <div class="modal-btns" style="margin-top:14px">
+      <button class="m-cancel" onclick="closeModal('editMutualModal')">Cancel</button>
+      <button class="m-ok" id="editMutualSubmitBtn" onclick="submitEditMutual()">✅ Save</button>
     </div>
   </div>
 </div>
@@ -244,68 +299,62 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
 <div id="toast"></div>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbw0FcWamrLrAftJXgnuRktlx7HXvAnjzl0iCTUuAoOXhU0VAHCpPS_Qi-naNzCwoKP2Og/exec";
-const CACHE_KEY = "ot_cache_v1";
+const API = "https://script.google.com/macros/s/AKfycbzYfaX_L87sP54KB2cdvMH7IT7qxnIctTKiDTKqinjdDMR-v7169zMOhwWX8hmFGLNqRQ/exec";
+const CACHE_KEY = "ot_cache_v2";
 
 let _nextInfo=null, _empList=[], _activeTab='dashboard';
 let _todayLoaded=false, _tmrLoaded=false, _histLoaded=false;
 let _leaveLoaded=false, _mutualLoaded=false;
 let _isOnline=navigator.onLine;
 
-// ── OFFLINE DETECTION ──
-window.addEventListener('online',  ()=>{ _isOnline=true;  document.getElementById('offline-bar').classList.remove('show'); syncOfflineQueue(); });
-window.addEventListener('offline', ()=>{ _isOnline=false; document.getElementById('offline-bar').classList.add('show'); });
+// ── OFFLINE ──
+window.addEventListener('online', ()=>{ _isOnline=true; document.getElementById('offline-bar').classList.remove('show'); syncOfflineQueue(); });
+window.addEventListener('offline',()=>{ _isOnline=false; document.getElementById('offline-bar').classList.add('show'); });
 if(!_isOnline) document.getElementById('offline-bar').classList.add('show');
 
-// ── OFFLINE QUEUE (for leave/mutual submit when offline) ──
-function getOfflineQueue(){ try{return JSON.parse(localStorage.getItem('ot_offline_q')||'[]');}catch(e){return[];} }
-function saveOfflineQueue(q){ localStorage.setItem('ot_offline_q', JSON.stringify(q)); }
-function addToOfflineQueue(item){ const q=getOfflineQueue(); q.push(item); saveOfflineQueue(q); }
+function getQ(){ try{return JSON.parse(localStorage.getItem('ot_q')||'[]');}catch(e){return[];} }
+function saveQ(q){ localStorage.setItem('ot_q',JSON.stringify(q)); }
+function addQ(item){ const q=getQ(); q.push(item); saveQ(q); }
 
 async function syncOfflineQueue(){
-  const q=getOfflineQueue();
-  if(!q.length) return;
-  showToast('🔄 Offline data sync ho raha hai...');
-  let failed=[];
+  const q=getQ(); if(!q.length)return;
+  showToast('🔄 Sync ho raha hai...');
+  const failed=[];
   for(const item of q){
-    try{
-      const r=await fetch(item.url).then(r=>r.json());
-      if(!r.ok) failed.push(item);
-    }catch(e){ failed.push(item); }
+    try{ const r=await fetch(item.url).then(r=>r.json()); if(!r.ok)failed.push(item); }
+    catch(e){ failed.push(item); }
   }
-  saveOfflineQueue(failed);
-  if(!failed.length){ showToast('✅ Offline data sync ho gaya!'); loadLeaves(); loadMutuals(); }
-  else showToast(`⚠️ ${failed.length} item sync nahi hua`, true);
+  saveQ(failed);
+  if(!failed.length){ showToast('✅ Sync ho gaya!'); reloadLeaves(); reloadMutuals(); }
+  else showToast('⚠️ '+failed.length+' item sync nahi hua',true);
 }
 
 // ── CACHE ──
-function setCache(key, data){ try{ const c=JSON.parse(localStorage.getItem(CACHE_KEY)||'{}'); c[key]=data; localStorage.setItem(CACHE_KEY,JSON.stringify(c)); }catch(e){} }
-function getCache(key){ try{ const c=JSON.parse(localStorage.getItem(CACHE_KEY)||'{}'); return c[key]||null; }catch(e){return null;} }
+function setC(key,data){ try{ const c=JSON.parse(localStorage.getItem(CACHE_KEY)||'{}'); c[key]=data; localStorage.setItem(CACHE_KEY,JSON.stringify(c)); }catch(e){} }
+function getC(key){ try{ return JSON.parse(localStorage.getItem(CACHE_KEY)||'{}')[key]||null; }catch(e){return null;} }
 
-// ── FETCH WITH CACHE ──
-async function apiFetch(action, params){
-  const url=API+'?action='+action+(params||'');
-  const cacheKey=action+(params||'');
+async function apiFetch(action, qs){
+  const url=API+'?action='+action+(qs||'');
+  const ck=action+(qs||'');
   try{
     if(!_isOnline) throw new Error('offline');
     const r=await fetch(url).then(r=>r.json());
-    setCache(cacheKey, r);
-    return r;
+    setC(ck,r); return r;
   }catch(e){
-    const cached=getCache(cacheKey);
+    const cached=getC(ck);
     if(cached) return cached;
     throw e;
   }
 }
 
 // ── CLOCK ──
-function updateClock(){const n=new Date();document.getElementById('clock').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
-setInterval(updateClock,1000);updateClock();
+function tick(){const n=new Date();document.getElementById('clock').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
+setInterval(tick,1000);tick();
 
 // ── TABS ──
 function switchTab(name){
   _activeTab=name;
-  document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',['dashboard','today','tomorrow','history','leave','mutual'][i]===name);});
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['dashboard','today','tomorrow','history','leave','mutual'][i]===name));
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   if(name==='today'&&!_todayLoaded)loadToday();
@@ -318,27 +367,26 @@ function switchTab(name){
 // ── TOAST ──
 function showToast(msg,isError){
   const t=document.getElementById('toast');
-  t.textContent=msg;t.className=isError?'error show':'show';
+  t.textContent=msg; t.className=isError?'error show':'show';
   setTimeout(()=>t.classList.remove('show'),3000);
 }
 
-// ── BTN LOADING STATE ──
-function setBtnLoading(id,loading){
-  const b=document.getElementById(id);
-  if(!b)return;
-  b.disabled=loading;
-  if(loading){b.dataset.orig=b.textContent;b.classList.add('btn-loading');}
-  else{b.classList.remove('btn-loading');b.textContent=b.dataset.orig||b.textContent;}
+// ── MODAL ──
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+
+// ── BTN LOADING ──
+function setLoading(id,on){
+  const b=document.getElementById(id); if(!b)return;
+  b.disabled=on;
+  if(on){b._orig=b.innerHTML;b.classList.add('btn-spin');}
+  else{b.classList.remove('btn-spin');if(b._orig)b.innerHTML=b._orig;}
 }
 
 // ── DASHBOARD ──
 async function loadDashboard(){
   document.getElementById('otStatus').textContent='Loading...';
   try{
-    const[otRes,nextRes]=await Promise.all([
-      apiFetch('getOT'),
-      apiFetch('getNext')
-    ]);
+    const[otRes,nextRes]=await Promise.all([apiFetch('getOT'),apiFetch('getNext')]);
     document.getElementById('otStatus').textContent=otRes.message||'—';
     _nextInfo=nextRes;
     if(nextRes.shortage){
@@ -348,14 +396,14 @@ async function loadDashboard(){
       document.getElementById('cShift').textContent=nextRes.todayShift;
       document.getElementById('cOtShift').textContent=nextRes.otShift;
       document.getElementById('cOtDate').textContent=nextRes.otDate;
-      const badge=document.getElementById('cBadge');
-      badge.textContent=nextRes.otDay==='Aaj'?'Aaj':'Kal';
-      badge.className='badge '+(nextRes.otDay==='Aaj'?'badge-aaj':'badge-kal');
+      const b=document.getElementById('cBadge');
+      b.textContent=nextRes.otDay==='Aaj'?'Aaj':'Kal';
+      b.className='badge '+(nextRes.otDay==='Aaj'?'badge-aaj':'badge-kal');
     }else{
       document.getElementById('candidateCard').style.display='none';
       document.getElementById('noShortage').style.display='block';
     }
-  }catch(err){document.getElementById('otStatus').textContent=_isOnline?'⚠️ Load failed':'📡 Offline — No cached data';}
+  }catch(e){document.getElementById('otStatus').textContent=_isOnline?'⚠️ Load failed':'📡 Offline — No cached data';}
 }
 
 // ── TODAY ──
@@ -365,15 +413,15 @@ async function loadToday(){
   try{
     const res=await apiFetch('todayWeb');
     if(!res.ok||!res.shifts)throw new Error();
-    const labels={'1st':{label:'1st Shift',cls:'shift-1st',icon:'🌅'},'2nd':{label:'2nd Shift',cls:'shift-2nd',icon:'☀️'},'3rd':{label:'3rd Shift',cls:'shift-3rd',icon:'🌙'},'REST':{label:'Rest Day',cls:'shift-rest',icon:'🛌'}};
-    let html='';
-    for(const key of['1st','2nd','3rd','REST']){
-      const emps=res.shifts[key]||[],info=labels[key];
-      const chips=emps.map(n=>{const cls=n.includes('(OT)')?'ot':n.includes('(Mutual)')?'mutual':n.includes('(Leave)')?'leave':'';return`<span class="emp-chip ${cls}">${escHtml(n)}</span>`;}).join('')||'<span style="color:var(--muted);font-size:14px">Koi nahi</span>';
-      html+=`<div class="shift-group"><div class="shift-header ${info.cls}"><span>${info.icon} ${info.label}</span><span style="font-size:13px;color:var(--muted)">${emps.length} employee</span></div><div class="shift-body">${chips}</div></div>`;
+    const L={'1st':{label:'1st Shift',cls:'shift-1st',icon:'🌅'},'2nd':{label:'2nd Shift',cls:'shift-2nd',icon:'☀️'},'3rd':{label:'3rd Shift',cls:'shift-3rd',icon:'🌙'},'REST':{label:'Rest Day',cls:'shift-rest',icon:'🛌'}};
+    let h='';
+    for(const k of['1st','2nd','3rd','REST']){
+      const emps=res.shifts[k]||[],l=L[k];
+      const chips=emps.map(n=>{const c=n.includes('(OT)')?'ot':n.includes('(Mutual)')?'mutual':n.includes('(Leave)')?'leave':'';return`<span class="emp-chip ${c}">${esc(n)}</span>`;}).join('')||'<span style="color:var(--muted);font-size:14px">Koi nahi</span>';
+      h+=`<div class="shift-group"><div class="shift-header ${l.cls}"><span>${l.icon} ${l.label}</span><span style="font-size:13px;color:var(--muted)">${emps.length} emp</span></div><div class="shift-body">${chips}</div></div>`;
     }
-    document.getElementById('todayContent').innerHTML=html;
-  }catch(err){document.getElementById('todayContent').innerHTML='<div class="empty">⚠️ Load failed</div>';}
+    document.getElementById('todayContent').innerHTML=h;
+  }catch(e){document.getElementById('todayContent').innerHTML='<div class="empty">⚠️ Load failed</div>';}
 }
 function reloadToday(){_todayLoaded=false;loadToday();}
 
@@ -384,8 +432,8 @@ async function loadTomorrow(){
   try{
     const res=await apiFetch('tomorrowWeb');
     if(!res.ok)throw new Error();
-    document.getElementById('tomorrowContent').innerHTML=`<div class="status-box" style="margin-bottom:10px">${escHtml(res.text||'—')}</div>`;
-  }catch(err){document.getElementById('tomorrowContent').innerHTML='<div class="empty">⚠️ Load failed</div>';}
+    document.getElementById('tomorrowContent').innerHTML=`<div class="status-box">${esc(res.text||'—')}</div>`;
+  }catch(e){document.getElementById('tomorrowContent').innerHTML='<div class="empty">⚠️ Load failed</div>';}
 }
 function reloadTomorrow(){_tmrLoaded=false;loadTomorrow();}
 
@@ -396,20 +444,21 @@ async function loadHistory(){
   try{
     const res=await apiFetch('historyWeb');
     if(!res.ok||!res.records.length){document.getElementById('historyContent').innerHTML='<div class="empty">📭 Koi OT record nahi (±7 days)</div>';return;}
-    const iconMap={'Accept':'✅','OT Assigned':'✅','Refuse':'❌','Skip (Same Shift)':'⏭','Lapse (Leave)':'🏥'};
+    const icons={'Accept':'✅','OT Assigned':'✅','Refuse':'❌','Skip (Same Shift)':'⏭','Lapse (Leave)':'🏥'};
     const today=new Date();today.setHours(0,0,0,0);
-    const todayStr=fmtDateStr(today);
-    let html='',lastDate='';
+    const ts=fmtD(today);
+    let h='',ld='';
     for(const r of res.records){
-      if(r.date!==lastDate){
-        const tag=r.date===todayStr?' 🔵 Aaj':r.ts<today.getTime()?' (Past)':' (Upcoming)';
-        html+=`<div class="hist-date-divider">📅 ${r.date}${tag}</div>`;lastDate=r.date;
+      if(r.date!==ld){
+        const tag=r.date===ts?' 🔵 Aaj':r.ts<today.getTime()?' (Past)':' (Upcoming)';
+        h+=`<div class="hist-date-divider">📅 ${r.date}${tag}</div>`;ld=r.date;
       }
-      html+=`<div class="hist-entry"><div class="hist-icon">${iconMap[r.action]||'📌'}</div><div><div class="hist-name">${escHtml(r.name)}</div><div class="hist-meta">${escHtml(r.shift)} · ${escHtml(r.action)}</div></div></div>`;
+      h+=`<div class="hist-entry"><div class="hist-icon">${icons[r.action]||'📌'}</div><div class="hist-main"><div class="hist-name">${esc(r.name)}</div><div class="hist-meta">${esc(r.shift)} · ${esc(r.action)}</div></div></div>`;
     }
-    document.getElementById('historyContent').innerHTML=`<div style="padding:4px 0">${html}</div>`;
-  }catch(err){document.getElementById('historyContent').innerHTML='<div class="empty">⚠️ Load failed</div>';}
+    document.getElementById('historyContent').innerHTML=`<div style="padding:4px 0">${h}</div>`;
+  }catch(e){document.getElementById('historyContent').innerHTML='<div class="empty">⚠️ Load failed</div>';}
 }
+function reloadHistory(){_histLoaded=false;loadHistory();}
 
 // ── LEAVE LIST ──
 async function loadLeaves(){
@@ -417,22 +466,31 @@ async function loadLeaves(){
   document.getElementById('leaveList').innerHTML='<div class="loader"><div class="spinner"></div>Loading...</div>';
   try{
     const res=await apiFetch('getLeaves');
-    if(!res.ok||!res.leaves.length){
-      document.getElementById('leaveList').innerHTML='<div class="empty" style="padding:20px 0">📭 Koi active/upcoming leave nahi</div>';return;
+    if(!res.ok||!res.leaves||!res.leaves.length){
+      document.getElementById('leaveList').innerHTML='<div class="empty" style="padding:16px 0">📭 Koi active/upcoming leave nahi</div>';return;
     }
-    let html=`<div class="section-title">📋 Active & Upcoming Leaves (${res.leaves.length})</div>`;
+    let h='';
     for(const l of res.leaves){
-      const pill=l.active?'<span class="pill pill-active">Active</span>':'<span class="pill pill-future">Upcoming</span>';
-      html+=`<div class="list-item">
-        <div class="list-item-top">
-          <div><div class="list-item-name">${escHtml(l.name)}</div><div class="list-item-meta">📅 ${l.from} → ${l.to}${l.reason?' · '+escHtml(l.reason):''}</div></div>
-          <div style="display:flex;align-items:center;gap:8px">${pill}<button class="btn-del" onclick="confirmDelete('leave','${escAttr(l.id)}','${escAttr(l.name)} (${l.from})')">🗑️</button></div>
+      const pill=l.active?'<span class="pill pill-active">🟢 Active</span>':'<span class="pill pill-future">🔵 Upcoming</span>';
+      // Store data in data attributes for edit
+      const dataStr=`data-id="${escA(l.id)}" data-name="${escA(l.name)}" data-from="${escA(l.from)}" data-to="${escA(l.to)}" data-reason="${escA(l.reason||'')}"`;
+      h+=`<div class="list-card">
+        <div class="list-card-row">
+          <div class="list-card-info">
+            <div class="list-card-name">${esc(l.name)} ${pill}</div>
+            <div class="list-card-meta">📅 ${l.from} → ${l.to}${l.reason?' · '+esc(l.reason):''}</div>
+          </div>
+          <div class="list-card-actions">
+            <button class="btn-sm btn-edit" ${dataStr} onclick="openEditLeave(this)">✏️</button>
+            <button class="btn-sm btn-del" data-id="${escA(l.id)}" data-label="${escA(l.name+' ('+l.from+')')}" onclick="askDelete('leave',this)">🗑️</button>
+          </div>
         </div>
       </div>`;
     }
-    document.getElementById('leaveList').innerHTML=html;
-  }catch(err){document.getElementById('leaveList').innerHTML='<div class="empty" style="padding:20px 0">⚠️ Load failed</div>';}
+    document.getElementById('leaveList').innerHTML=h;
+  }catch(e){document.getElementById('leaveList').innerHTML='<div class="empty" style="padding:16px 0">⚠️ Load failed</div>';}
 }
+function reloadLeaves(){_leaveLoaded=false;loadLeaves();}
 
 // ── MUTUAL LIST ──
 async function loadMutuals(){
@@ -440,72 +498,139 @@ async function loadMutuals(){
   document.getElementById('mutualList').innerHTML='<div class="loader"><div class="spinner"></div>Loading...</div>';
   try{
     const res=await apiFetch('getMutuals');
-    if(!res.ok||!res.mutuals.length){
-      document.getElementById('mutualList').innerHTML='<div class="empty" style="padding:20px 0">📭 Koi upcoming mutual nahi</div>';return;
+    if(!res.ok||!res.mutuals||!res.mutuals.length){
+      document.getElementById('mutualList').innerHTML='<div class="empty" style="padding:16px 0">📭 Koi upcoming mutual nahi</div>';return;
     }
-    let html=`<div class="section-title">🔄 Upcoming Mutuals (${res.mutuals.length})</div>`;
+    let h='';
     for(const m of res.mutuals){
-      const st=m.status==='Applied'?'pill-applied':'pill-approved';
-      const canDel=m.status!=='Applied';
-      html+=`<div class="list-item">
-        <div class="list-item-top">
-          <div>
-            <div class="list-item-name">${escHtml(m.emp1)} ↔ ${escHtml(m.emp2)}</div>
-            <div class="list-item-meta">📅 ${m.date} · <span class="pill ${st}">${m.status}</span></div>
+      const canEdit=m.status!=='Applied';
+      const pill=m.status==='Applied'?'<span class="pill pill-applied">✅ Applied</span>':'<span class="pill pill-approved">🔵 Approved</span>';
+      h+=`<div class="list-card">
+        <div class="list-card-row">
+          <div class="list-card-info">
+            <div class="list-card-name">${esc(m.emp1)} ↔ ${esc(m.emp2)}</div>
+            <div class="list-card-meta">📅 ${m.date} &nbsp;${pill}</div>
           </div>
-          ${canDel?`<button class="btn-del" onclick="confirmDelete('mutual','${escAttr(m.id)}','${escAttr(m.emp1)} ↔ ${escAttr(m.emp2)} (${m.date})')">🗑️</button>`:'<span style="font-size:12px;color:var(--muted)">Applied</span>'}
+          <div class="list-card-actions">
+            ${canEdit?`<button class="btn-sm btn-edit" data-id="${escA(m.id)}" data-e1="${escA(m.emp1)}" data-e2="${escA(m.emp2)}" data-date="${escA(m.date)}" onclick="openEditMutual(this)">✏️</button>
+            <button class="btn-sm btn-del" data-id="${escA(m.id)}" data-label="${escA(m.emp1+' ↔ '+m.emp2+' ('+m.date+')')}" onclick="askDelete('mutual',this)">🗑️</button>`
+            :'<span style="font-size:12px;color:var(--muted)">Applied</span>'}
+          </div>
         </div>
       </div>`;
     }
-    document.getElementById('mutualList').innerHTML=html;
-  }catch(err){document.getElementById('mutualList').innerHTML='<div class="empty" style="padding:20px 0">⚠️ Load failed</div>';}
+    document.getElementById('mutualList').innerHTML=h;
+  }catch(e){document.getElementById('mutualList').innerHTML='<div class="empty" style="padding:16px 0">⚠️ Load failed</div>';}
 }
+function reloadMutuals(){_mutualLoaded=false;loadMutuals();}
 
-// ── DELETE CONFIRM ──
-let _deleteType=null, _deleteId=null;
-function confirmDelete(type,id,label){
-  _deleteType=type; _deleteId=id;
+// ── DELETE ──
+let _delType=null, _delId=null;
+function askDelete(type, btn){
+  _delType=type;
+  _delId=btn.dataset.id;
+  const label=btn.dataset.label||'';
   document.getElementById('deleteModalInfo').textContent=(type==='leave'?'Leave':'Mutual')+' delete karna hai?\n\n'+label;
-  document.getElementById('deleteConfirmBtn').onclick=doDelete;
+  document.getElementById('deleteConfirmBtn').onclick=doDelete; // set fresh onclick
   document.getElementById('deleteModal').classList.add('show');
 }
-function closeDeleteModal(){document.getElementById('deleteModal').classList.remove('show');_deleteType=null;_deleteId=null;}
+
 async function doDelete(){
-  closeDeleteModal();
-  if(!_deleteType||!_deleteId)return;
+  // Read values BEFORE closing modal
+  const type=_delType, id=_delId;
+  closeModal('deleteModal');
+  if(!type||!id){showToast('ID missing!',true);return;}
   try{
-    const action=_deleteType==='leave'?'deleteLeave':'deleteMutual';
-    const r=await fetch(`${API}?action=${action}&id=${enc(_deleteId)}`).then(r=>r.json());
+    const action=type==='leave'?'deleteLeave':'deleteMutual';
+    const r=await fetch(`${API}?action=${action}&id=${enc(id)}`).then(r=>r.json());
     if(r.ok){
       showToast(r.msg||'✅ Delete ho gaya!');
-      if(_deleteType==='leave'){_leaveLoaded=false;loadLeaves();}
-      else{_mutualLoaded=false;loadMutuals();}
-    }else{showToast(r.msg||'Error!',true);}
+      if(type==='leave')reloadLeaves();
+      else reloadMutuals();
+    }else{
+      showToast(r.msg||'Delete failed!',true);
+    }
   }catch(e){showToast('Network error!',true);}
+  finally{_delType=null;_delId=null;}
 }
 
-// ── MODAL ──
+// ── EDIT LEAVE ──
+function openEditLeave(btn){
+  document.getElementById('editLeaveId').value=btn.dataset.id;
+  document.getElementById('editLeaveName').value=btn.dataset.name;
+  // Convert DD-MM-YYYY to YYYY-MM-DD for date input
+  document.getElementById('editLeaveFrom').value=ddmmyyyy2input(btn.dataset.from);
+  document.getElementById('editLeaveTo').value=ddmmyyyy2input(btn.dataset.to);
+  document.getElementById('editLeaveReason').value=btn.dataset.reason||'';
+  document.getElementById('editLeaveModal').classList.add('show');
+}
+async function submitEditLeave(){
+  const id=document.getElementById('editLeaveId').value;
+  const name=document.getElementById('editLeaveName').value;
+  const from=document.getElementById('editLeaveFrom').value;
+  const to=document.getElementById('editLeaveTo').value;
+  const reason=document.getElementById('editLeaveReason').value;
+  if(!from||!to){showToast('Dates bharo!',true);return;}
+  if(from>to){showToast('From date galat!',true);return;}
+  setLoading('editLeaveSubmitBtn',true);
+  try{
+    // Delete old, add new
+    const del=await fetch(`${API}?action=deleteLeave&id=${enc(id)}`).then(r=>r.json());
+    if(!del.ok){showToast(del.msg||'Error!',true);return;}
+    const emp=_empList.find(e=>e.name===name);
+    const add=await fetch(`${API}?action=leaveWeb&name=${enc(name)}&uec=${enc(emp?.uec||'')}&from=${from}&to=${to}&reason=${enc(reason)}`).then(r=>r.json());
+    if(add.ok){showToast('✅ Leave update ho gaya!');closeModal('editLeaveModal');reloadLeaves();}
+    else showToast(add.msg||'Error!',true);
+  }catch(e){showToast('Network error!',true);}
+  finally{setLoading('editLeaveSubmitBtn',false);}
+}
+
+// ── EDIT MUTUAL ──
+function openEditMutual(btn){
+  document.getElementById('editMutualId').value=btn.dataset.id;
+  document.getElementById('editMutualEmp1').value=btn.dataset.e1;
+  document.getElementById('editMutualEmp2').value=btn.dataset.e2;
+  document.getElementById('editMutualDate').value=ddmmyyyy2input(btn.dataset.date);
+  document.getElementById('editMutualModal').classList.add('show');
+}
+async function submitEditMutual(){
+  const id=document.getElementById('editMutualId').value;
+  const emp1=document.getElementById('editMutualEmp1').value;
+  const emp2=document.getElementById('editMutualEmp2').value;
+  const date=document.getElementById('editMutualDate').value;
+  if(!date){showToast('Date bharo!',true);return;}
+  setLoading('editMutualSubmitBtn',true);
+  try{
+    const del=await fetch(`${API}?action=deleteMutual&id=${enc(id)}`).then(r=>r.json());
+    if(!del.ok){showToast(del.msg||'Error!',true);return;}
+    const add=await fetch(`${API}?action=mutualWeb&emp1=${enc(emp1)}&emp2=${enc(emp2)}&date=${date}`).then(r=>r.json());
+    if(add.ok){showToast('✅ Mutual update ho gaya!');closeModal('editMutualModal');reloadMutuals();}
+    else showToast(add.msg||'Error!',true);
+  }catch(e){showToast('Network error!',true);}
+  finally{setLoading('editMutualSubmitBtn',false);}
+}
+
+// ── OT ACTION MODAL ──
 async function confirmAction(type){
   if(!_nextInfo)await loadDashboard();
   if(type==='accept'&&!_nextInfo?.shortage){showToast('Koi shortage nahi hai!',true);return;}
   const titles={accept:'✅ OT Accept?',refuse:'❌ OT Refuse?',skip:'⏭ Skip karna hai?'};
   document.getElementById('modalTitle').textContent=titles[type];
   let info='—';
-  if(type==='accept'&&_nextInfo?.shortage){info=`👤  ${_nextInfo.name}\n🕐  Today Shift: ${_nextInfo.todayShift}\n⚡  OT Shift: ${_nextInfo.otShift}\n📅  OT Date: ${_nextInfo.otDate} (${_nextInfo.otDay})`;}
-  else if(type==='refuse'){info='Next employee ko refuse karna hai?';}
-  else if(type==='skip'){info='Next employee ko skip karna hai?';}
+  if(type==='accept'&&_nextInfo?.shortage) info=`👤  ${_nextInfo.name}\n🕐  Today Shift: ${_nextInfo.todayShift}\n⚡  OT Shift: ${_nextInfo.otShift}\n📅  OT Date: ${_nextInfo.otDate} (${_nextInfo.otDay})`;
+  else if(type==='refuse') info='Next employee ko refuse karna hai?';
+  else info='Next employee ko skip karna hai?';
   document.getElementById('modalInfo').textContent=info;
   document.getElementById('modalConfirmBtn').onclick=()=>doAction(type);
   document.getElementById('confirmModal').classList.add('show');
 }
-function closeModal(){document.getElementById('confirmModal').classList.remove('show');}
 async function doAction(type){
-  closeModal();
+  closeModal('confirmModal');
   try{
     const res=await fetch(API+'?action='+type).then(r=>r.json());
     if(res.ok){showToast(type==='accept'?'✅ Accept ho gaya!':type==='refuse'?'❌ Refuse ho gaya!':'⏭ Skip ho gaya!');_nextInfo=null;setTimeout(loadDashboard,1500);}
-    else{showToast(res.msg||'Error aaya',true);}
-  }catch(err){showToast('Network error!',true);}
+    else showToast(res.msg||'Error!',true);
+  }catch(e){showToast('Network error!',true);}
 }
 
 // ── EMPLOYEES ──
@@ -513,10 +638,9 @@ async function loadEmployees(){
   try{
     _empList=await apiFetch('empList');
     if(!Array.isArray(_empList))_empList=[];
-    let opts='';
-    _empList.forEach(e=>{opts+=`<option value="${escAttr(e.name)}">${escHtml(e.name)}</option>`;});
+    const opts=_empList.map(e=>`<option value="${escA(e.name)}">${esc(e.name)}</option>`).join('');
     ['leaveName','mutualEmp1','mutualEmp2'].forEach(id=>{document.getElementById(id).innerHTML=opts;});
-  }catch(err){}
+  }catch(e){}
 }
 
 // ── LEAVE SUBMIT ──
@@ -526,33 +650,26 @@ async function submitLeave(){
   const to=document.getElementById('leaveTo').value;
   const reason=document.getElementById('leaveReason').value;
   if(!name||!from||!to){showToast('Sab fields bharo!',true);return;}
-  if(from>to){showToast('From date, To date se badi nahi ho sakti!',true);return;}
+  if(from>to){showToast('From date galat!',true);return;}
   const emp=_empList.find(e=>e.name===name);
-  const uec=emp?emp.uec:'';
-  const url=`${API}?action=leaveWeb&name=${enc(name)}&uec=${enc(uec)}&from=${from}&to=${to}&reason=${enc(reason)}`;
-
-  setBtnLoading('leaveSubmitBtn',true);
+  const url=`${API}?action=leaveWeb&name=${enc(name)}&uec=${enc(emp?.uec||'')}&from=${from}&to=${to}&reason=${enc(reason)}`;
+  setLoading('leaveSubmitBtn',true);
   try{
-    if(!_isOnline){
-      addToOfflineQueue({url,type:'leave'});
-      showToast('📡 Offline — Leave queued, network aane par sync hoga');
-      setBtnLoading('leaveSubmitBtn',false);return;
-    }
+    if(!_isOnline){addQ({url,type:'leave'});showToast('📡 Offline — Queued');return;}
     const res=await fetch(url).then(r=>r.json());
     if(res.ok){
       showToast(res.msg||'✅ Leave submit ho gaya!');
       document.getElementById('leaveFrom').value='';document.getElementById('leaveTo').value='';document.getElementById('leaveReason').value='';
-      _leaveLoaded=false;loadLeaves();
-    }else{showToast(res.msg||'Error!',true);}
-  }catch(err){showToast('Network error!',true);}
-  finally{setBtnLoading('leaveSubmitBtn',false);}
+      reloadLeaves();
+    }else showToast(res.msg||'Error!',true);
+  }catch(e){showToast('Network error!',true);}
+  finally{setLoading('leaveSubmitBtn',false);}
 }
 
 // ── MUTUAL SUBMIT ──
 function validateMutualEmps(){
-  const e1=document.getElementById('mutualEmp1').value;
-  const e2=document.getElementById('mutualEmp2').value;
-  document.getElementById('mutualEmpWarn').style.display=(e1===e2)?'block':'none';
+  document.getElementById('mutualEmpWarn').style.display=
+    document.getElementById('mutualEmp1').value===document.getElementById('mutualEmp2').value?'block':'none';
 }
 async function submitMutual(){
   const emp1=document.getElementById('mutualEmp1').value;
@@ -561,42 +678,43 @@ async function submitMutual(){
   if(!date){showToast('Date select karo!',true);return;}
   if(emp1===emp2){showToast('Dono employee alag hone chahiye!',true);return;}
   const url=`${API}?action=mutualWeb&emp1=${enc(emp1)}&emp2=${enc(emp2)}&date=${date}`;
-
-  setBtnLoading('mutualSubmitBtn',true);
+  setLoading('mutualSubmitBtn',true);
   try{
-    if(!_isOnline){
-      addToOfflineQueue({url,type:'mutual'});
-      showToast('📡 Offline — Mutual queued, network aane par sync hoga');
-      setBtnLoading('mutualSubmitBtn',false);return;
-    }
+    if(!_isOnline){addQ({url,type:'mutual'});showToast('📡 Offline — Queued');return;}
     const res=await fetch(url).then(r=>r.json());
     if(res.ok){
       showToast(res.msg||'✅ Mutual submit ho gaya!');
       document.getElementById('mutualDate').value='';
-      _mutualLoaded=false;loadMutuals();
-    }else{showToast(res.msg||'Error!',true);}
-  }catch(err){showToast('Network error!',true);}
-  finally{setBtnLoading('mutualSubmitBtn',false);}
+      reloadMutuals();
+    }else showToast(res.msg||'Error!',true);
+  }catch(e){showToast('Network error!',true);}
+  finally{setLoading('mutualSubmitBtn',false);}
 }
 
 // ── UTILS ──
 function enc(s){return encodeURIComponent(s||'');}
-function escHtml(s){return(s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function escAttr(s){return(s||'').toString().replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
-function fmtDateStr(d){return String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear();}
+function esc(s){return(s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escA(s){return(s||'').toString().replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function fmtD(d){return String(d.getDate()).padStart(2,'0')+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+d.getFullYear();}
+function ddmmyyyy2input(s){
+  // DD-MM-YYYY → YYYY-MM-DD
+  if(!s)return'';
+  const p=s.split('-');
+  if(p.length!==3)return s;
+  return p[2]+'-'+p[1]+'-'+p[0];
+}
 function setDefaultDates(){
-  const today=new Date().toISOString().split('T')[0];
-  document.getElementById('leaveFrom').value=today;
-  document.getElementById('leaveTo').value=today;
-  document.getElementById('mutualDate').value=today;
+  const t=new Date().toISOString().split('T')[0];
+  ['leaveFrom','leaveTo','mutualDate','editLeaveFrom','editLeaveTo','editMutualDate'].forEach(id=>{
+    const el=document.getElementById(id); if(el&&!el.value)el.value=t;
+  });
 }
 
 // ── INIT ──
 loadDashboard();
 loadEmployees();
 setDefaultDates();
-// Sync offline queue if online
-if(_isOnline) syncOfflineQueue();
+if(_isOnline)syncOfflineQueue();
 </script>
 </body>
 </html>
