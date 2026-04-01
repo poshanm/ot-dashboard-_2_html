@@ -1961,6 +1961,98 @@ function getOTHistoryJson() {
   } catch(err) { return { ok: false, records: [] }; }
 }
 
+// ── Leave List (submitted) ────────────────────────────────────
+function getLeavesJson() {
+  try {
+    var data = SS.getSheetByName(SHEETS.LEAVE).getDataRange().getValues();
+    var td   = today0();
+    var list = [];
+    for (var i = 1; i < data.length; i++) {
+      if (!data[i][0]) continue;
+      var fr = toDate(data[i][4]);
+      var to = toDate(data[i][5]);
+      if (!fr || !to) continue;
+      // Only upcoming + active (not expired)
+      if (to < td) continue;
+      list.push({
+        id:     (data[i][0] || "").toString(),
+        uec:    (data[i][1] || "").toString(),
+        name:   (data[i][2] || "").toString(),
+        from:   Utilities.formatDate(fr, "GMT+5:30", "dd-MM-yyyy"),
+        to:     Utilities.formatDate(to, "GMT+5:30", "dd-MM-yyyy"),
+        reason: (data[i][6] || "").toString(),
+        fromTs: fr.getTime(),
+        toTs:   to.getTime(),
+        active: (td >= fr && td <= to)
+      });
+    }
+    list.sort(function(a,b){ return a.fromTs - b.fromTs; });
+    return { ok: true, leaves: list };
+  } catch(err) { return { ok: false, leaves: [] }; }
+}
+
+// ── Mutual List ───────────────────────────────────────────────
+function getMutualsJson() {
+  try {
+    var data = SS.getSheetByName(SHEETS.MUTUAL).getDataRange().getValues();
+    var td   = today0();
+    var list = [];
+    for (var i = 1; i < data.length; i++) {
+      if (!data[i][0]) continue;
+      var dt = toDate(data[i][5]);
+      if (!dt || dt < td) continue; // only future + today
+      list.push({
+        id:     (data[i][0] || "").toString(),
+        emp1:   (data[i][1] || "").toString(),
+        emp2:   (data[i][2] || "").toString(),
+        date:   Utilities.formatDate(dt, "GMT+5:30", "dd-MM-yyyy"),
+        status: (data[i][6] || "").toString(),
+        ts:     dt.getTime()
+      });
+    }
+    list.sort(function(a,b){ return a.ts - b.ts; });
+    return { ok: true, mutuals: list };
+  } catch(err) { return { ok: false, mutuals: [] }; }
+}
+
+// ── Delete Leave by ID ────────────────────────────────────────
+function deleteLeaveById(id) {
+  try {
+    if (!id) return { ok: false, msg: "ID missing" };
+    var sheet = SS.getSheetByName(SHEETS.LEAVE);
+    var data  = sheet.getDataRange().getValues();
+    for (var i = 1; i < data.length; i++) {
+      if ((data[i][0] || "").toString() === id) {
+        sheet.deleteRow(i + 1);
+        clearCache();
+        updateOTStatus();
+        return { ok: true, msg: "Leave delete ho gaya!" };
+      }
+    }
+    return { ok: false, msg: "Leave nahi mila" };
+  } catch(err) { return { ok: false, msg: "Error: " + err }; }
+}
+
+// ── Delete Mutual by ID ───────────────────────────────────────
+function deleteMutualById(id) {
+  try {
+    if (!id) return { ok: false, msg: "ID missing" };
+    var sheet = SS.getSheetByName(SHEETS.MUTUAL);
+    var data  = sheet.getDataRange().getValues();
+    for (var i = 1; i < data.length; i++) {
+      if ((data[i][0] || "").toString() === id) {
+        var st = (data[i][6] || "").toString();
+        if (st === "Applied") return { ok: false, msg: "Applied mutual delete nahi ho sakta" };
+        sheet.deleteRow(i + 1);
+        clearCache();
+        updateOTStatus();
+        return { ok: true, msg: "Mutual delete ho gaya!" };
+      }
+    }
+    return { ok: false, msg: "Mutual nahi mila" };
+  } catch(err) { return { ok: false, msg: "Error: " + err }; }
+}
+
 function submitLeaveWebV2(nameParam, uecParam, from, to, reason) {
   try {
     if (!nameParam || !from || !to) return { ok: false, msg: "Fields missing" };
@@ -2113,6 +2205,15 @@ function doGet(e) {
   if (action === "todayWeb")   { return json(getTodayShiftJson()); }
   if (action === "tomorrowWeb"){ return json(getTomorrowShiftJson()); }
   if (action === "historyWeb") { return json(getOTHistoryJson()); }
+  if (action === "getLeaves")  { return json(getLeavesJson()); }
+  if (action === "getMutuals") { return json(getMutualsJson()); }
+
+  if (action === "deleteLeave") {
+    return json(deleteLeaveById(e.parameter.id || ""));
+  }
+  if (action === "deleteMutual") {
+    return json(deleteMutualById(e.parameter.id || ""));
+  }
 
   if (action === "accept") {
     var info = getShiftShortage();
