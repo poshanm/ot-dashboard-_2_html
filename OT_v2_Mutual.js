@@ -2059,6 +2059,26 @@ function submitLeaveWebV2(nameParam, uecParam, from, to, reason) {
     var fr = new Date(from); fr.setHours(0,0,0,0);
     var tr = new Date(to);   tr.setHours(0,0,0,0);
     if (fr > tr) return { ok: false, msg: "From date, To date se badi hai" };
+
+    // ── DUPLICATE / OVERLAP CHECK ──
+    var existingLeaves = SS.getSheetByName(SHEETS.LEAVE).getDataRange().getValues();
+    for (var i = 1; i < existingLeaves.length; i++) {
+      var eName = (existingLeaves[i][2] || "").toString().trim();
+      if (eName !== nameParam) continue;
+      var eFr = toDate(existingLeaves[i][4]);
+      var eTo = toDate(existingLeaves[i][5]);
+      if (!eFr || !eTo) continue;
+      // Overlap check: fr <= eTo && tr >= eFr
+      if (fr <= eTo && tr >= eFr) {
+        var eFromStr = Utilities.formatDate(eFr, "GMT+5:30", "dd-MM-yyyy");
+        var eToStr   = Utilities.formatDate(eTo, "GMT+5:30", "dd-MM-yyyy");
+        return {
+          ok: false,
+          msg: nameParam + " ki already leave hai: " + eFromStr + " → " + eToStr + "\nPehle delete karo, phir naya apply karo."
+        };
+      }
+    }
+
     var emp = readSheet(SHEETS.EMP);
     var empUec = uecParam || "";
     for (var i = 1; i < emp.length; i++) {
@@ -2084,6 +2104,36 @@ function submitMutualWebV2(emp1Name, emp2Name, date) {
     var mDate = new Date(date); mDate.setHours(0,0,0,0);
     var td    = today0();
     if (mDate < td) return { ok: false, msg: "Past date nahi ho sakta" };
+
+    // ── DUPLICATE MUTUAL CHECK ──
+    var existingMutuals = SS.getSheetByName(SHEETS.MUTUAL).getDataRange().getValues();
+    for (var i = 1; i < existingMutuals.length; i++) {
+      var me1 = (existingMutuals[i][1] || "").toString().trim();
+      var me2 = (existingMutuals[i][2] || "").toString().trim();
+      var mDt = toDate(existingMutuals[i][5]);
+      var mSt = (existingMutuals[i][6] || "").toString();
+      if (!mDt) continue;
+      if (mSt === "Applied" || mSt.indexOf("Blocked") === 0) continue;
+      // Same date + same pair (any order)
+      var sameDate = mDt.getTime() === mDate.getTime();
+      var samePair = (me1 === emp1Name && me2 === emp2Name) || (me1 === emp2Name && me2 === emp1Name);
+      // Same employee on same date (either person)
+      var emp1InEntry = (me1 === emp1Name || me2 === emp1Name);
+      var emp2InEntry = (me1 === emp2Name || me2 === emp2Name);
+      if (sameDate && samePair) {
+        return {
+          ok: false,
+          msg: emp1Name + " ↔ " + emp2Name + " ka is date ke liye mutual already hai.\nPehle delete karo, phir apply karo."
+        };
+      }
+      if (sameDate && emp1InEntry) {
+        return { ok: false, msg: emp1Name + " ka is date ke liye already mutual hai (" + me1 + " ↔ " + me2 + ")." };
+      }
+      if (sameDate && emp2InEntry) {
+        return { ok: false, msg: emp2Name + " ka is date ke liye already mutual hai (" + me1 + " ↔ " + me2 + ")." };
+      }
+    }
+
     var emp = readSheet(SHEETS.EMP);
     var uec1 = "", uec2 = "";
     for (var i = 1; i < emp.length; i++) {
