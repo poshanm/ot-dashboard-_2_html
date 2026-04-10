@@ -403,7 +403,7 @@ input[type=range]::-webkit-slider-thumb{
 const API = "https://script.google.com/macros/s/AKfycbw0FcWamrLrAftJXgnuRktlx7HXvAnjzl0iCTUuAoOXhU0VAHCpPS_Qi-naNzCwoKP2Og/exec";
 const CACHE_KEY = "ot_cache_v3";
 const PREF_KEY  = "ot_prefs_v1";
-const LAST_TAB_KEY = "ot_last_tab";
+
 
 let _nextInfo=null, _empList=[], _activeTab='dashboard';
 let _todayLoaded=false, _tmrLoaded=false, _histLoaded=false;
@@ -503,8 +503,7 @@ function switchTab(name){
   if(name==='history'&&!_histLoaded)loadHistory();
   if(name==='leave'&&!_leaveLoaded)loadLeaves();
   if(name==='mutual'&&!_mutualLoaded)loadMutuals();
-  // ⭐ NEW — remember tab
-  localStorage.setItem(LAST_TAB_KEY,name);
+ 
 
 }
   function preloadAllTabs(){
@@ -542,12 +541,7 @@ function switchTab(name){
   next();
 
 }
-function restoreLastTab(){
-  const last =
-    localStorage.getItem(LAST_TAB_KEY) || 'dashboard';
 
-  switchTab(last);
-}
 // ── TOAST ──
 function showToast(msg,isError){
   const t=document.getElementById('toast');
@@ -917,33 +911,20 @@ function setDefaultDates(){
   catch(e){}
 
 }
-  // ── INIT ──
+// ── INIT ──
 
 loadPrefs();
 
 loadDashboard();
-
 loadEmployees();
-
 setDefaultDates();
 
 if(_isOnline)
   syncOfflineQueue();
 
-
-// ⭐ restore tab first
+// background preload
 setTimeout(()=>{
-
-  restoreLastTab();
-
-},100);
-
-
-// ⭐ preload background
-setTimeout(()=>{
-
   preloadAllTabs();
-
 },800);
 
 
