@@ -403,6 +403,7 @@ input[type=range]::-webkit-slider-thumb{
 const API = "https://script.google.com/macros/s/AKfycbw0FcWamrLrAftJXgnuRktlx7HXvAnjzl0iCTUuAoOXhU0VAHCpPS_Qi-naNzCwoKP2Og/exec";
 const CACHE_KEY = "ot_cache_v3";
 const PREF_KEY  = "ot_prefs_v1";
+const LAST_TAB_KEY = "ot_last_tab";
 
 let _nextInfo=null, _empList=[], _activeTab='dashboard';
 let _todayLoaded=false, _tmrLoaded=false, _histLoaded=false;
@@ -502,8 +503,16 @@ function switchTab(name){
   if(name==='history'&&!_histLoaded)loadHistory();
   if(name==='leave'&&!_leaveLoaded)loadLeaves();
   if(name==='mutual'&&!_mutualLoaded)loadMutuals();
-}
+  // ⭐ NEW — remember tab
+  localStorage.setItem(LAST_TAB_KEY,name);
 
+}
+function restoreLastTab(){
+  const last =
+    localStorage.getItem(LAST_TAB_KEY) || 'dashboard';
+
+  switchTab(last);
+}
 // ── TOAST ──
 function showToast(msg,isError){
   const t=document.getElementById('toast');
@@ -827,57 +836,73 @@ function setDefaultDates(){
   ['leaveFrom','leaveTo','mutualDate'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=t;});
 }
 
-// ── INIT ──
+
+  // ── ULTRA SMOOTH BACKGROUND PRELOAD ──
+
+  function startBackgroundPreload(){
+
+  const tasks=[
+    ()=>{ if(!_todayLoaded){loadToday();_todayLoaded=true;} },
+    ()=>{ if(!_tmrLoaded){loadTomorrow();_tmrLoaded=true;} },
+    ()=>{ if(!_histLoaded){loadHistory();_histLoaded=true;} },
+    ()=>{ if(!_leaveLoaded){loadLeaves();_leaveLoaded=true;} },
+    ()=>{ if(!_mutualLoaded){loadMutuals();_mutualLoaded=true;} }
+  ];
+
+  let delay=400;
+
+  tasks.forEach(fn=>{
+    setTimeout(fn,delay);
+    delay+=600;
+  });
+
+}
+  async function warmUpCache(){
+
+  if(!_isOnline) return;
+
+  try{
+
+    await Promise.all([
+      apiFetch('todayWeb'),
+      apiFetch('tomorrowWeb'),
+      apiFetch('historyWeb'),
+      apiFetch('getLeaves'),
+      apiFetch('getMutuals')
+    ]);
+
+    console.log("Cache warmed");
+
+  }catch(e){
+    console.log("Warmup skipped");
+  }
+
+}
+  // ── INIT ──
+
 loadPrefs();
+
 loadDashboard();
 loadEmployees();
 setDefaultDates();
-if(_isOnline)syncOfflineQueue();
 
-  // ── ULTRA SMOOTH BACKGROUND PRELOAD ──
-function startBackgroundPreload(){
+// ⭐ Restore last tab
+restoreLastTab();
 
-  // Today (after 300ms)
-  setTimeout(()=>{
-    if(!_todayLoaded){
-      loadToday();
-      _todayLoaded=true;
-    }
-  },300);
+// ⭐ Load cached data instantly
+loadFromCacheFirst();
 
-  // Tomorrow (after 700ms)
-  setTimeout(()=>{
-    if(!_tmrLoaded){
-      loadTomorrow();
-      _tmrLoaded=true;
-    }
-  },700);
+// ⭐ Background preload
+startBackgroundPreload();
 
-  // History (after 1200ms)
-  setTimeout(()=>{
-    if(!_histLoaded){
-      loadHistory();
-      _histLoaded=true;
-    }
-  },1200);
+// ⭐ Warm cache
+setTimeout(()=>{
+  warmUpCache();
+},2500);
 
-  // Leaves (after 1700ms)
-  setTimeout(()=>{
-    if(!_leaveLoaded){
-      loadLeaves();
-      _leaveLoaded=true;
-    }
-  },1700);
-
-  // Mutuals (after 2200ms)
-  setTimeout(()=>{
-    if(!_mutualLoaded){
-      loadMutuals();
-      _mutualLoaded=true;
-    }
-  },2200);
-
-}
+// Offline sync
+if(_isOnline)
+  syncOfflineQueue();
 </script>
 </body>
 </html>
