@@ -11,21 +11,21 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{overflow-y:scroll;-webkit-overflow-scrolling:touch;height:auto;min-height:100%;}
 
-/* ── DARK THEME (default) ── */
 :root,[data-theme="dark"]{
   --bg:#0b0f1a;--surface:#131929;--card:#1a2236;--border:#2a3555;
   --text:#e8edf8;--muted:#7a8aaa;--accent:#4f8ef7;
   --green:#22c97a;--red:#f05c5c;--yellow:#f5a623;--purple:#9f7afa;
   --input-bg:#131929;--modal-bg:#1a2236;
   --mono:'JetBrains Mono',monospace;--sans:'Sora',sans-serif;
-  --fs:16px; /* base font size — settings se change hoga */
+  --fs:16px;
+  --sk1:#1a2236;--sk2:#2a3555; /* skeleton colors */
 }
-/* ── LIGHT THEME ── */
 [data-theme="light"]{
   --bg:#f0f4fc;--surface:#ffffff;--card:#ffffff;--border:#d0d9f0;
   --text:#1a2240;--muted:#6b7aaa;--accent:#2563eb;
   --green:#16a34a;--red:#dc2626;--yellow:#d97706;--purple:#7c3aed;
   --input-bg:#f8faff;--modal-bg:#ffffff;
+  --sk1:#e8eef8;--sk2:#d0d9f0;
 }
 
 body{
@@ -33,24 +33,32 @@ body{
   min-height:100vh;padding:110px 0 80px 0;
   font-size:var(--fs);
   transition:background .25s,color .25s;
-  /* iOS iframe scroll fix */
   overflow-y:scroll;
   -webkit-overflow-scrolling:touch;
 }
+
 #offline-bar{display:none;background:#3a1a1a;border-bottom:1px solid #5c2323;padding:8px 16px;text-align:center;font-size:13px;color:var(--red);font-weight:600;}
 #offline-bar.show{display:block;}
+
 .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;position:fixed;width:100%;top:0;z-index:50;transition:background .25s;}
 .topbar-title{font-size:19px;font-weight:700;color:var(--accent);}
 .topbar-right{display:flex;align-items:center;gap:12px;}
 .topbar-time{font-family:var(--mono);font-size:15px;color:var(--muted);font-weight:600;}
 .topbar-settings{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:2px;}
-/* iOS iframe tab scroll fix — must be scroll not auto */
+
 .tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:scroll;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:fixed;top:58px;width:100%;z-index:49;}
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex:0 0 auto;padding:14px 18px;font-size:15px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s;}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* ── SWIPE CONTAINER ── */
+#swipeContainer{
+  touch-action:pan-y; /* vertical scroll allow, horizontal detect karenge */
+}
+
 .section{display:none;padding:16px 16px 0}
 .section.active{display:block}
+
 .status-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;font-family:var(--mono);font-size:calc(var(--fs) - 1px);line-height:1.8;white-space:pre-wrap;color:var(--text);min-height:80px;transition:background .25s;}
 .action-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;}
 .action-row.two{grid-template-columns:1fr 1fr;}
@@ -70,6 +78,7 @@ body{
 .btn-spin{position:relative;color:transparent!important;pointer-events:none;}
 .btn-spin::after{content:'';position:absolute;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
+
 .candidate-card{background:linear-gradient(135deg,#1a2a3e,#1a2236);border:1px solid #2a4a6e;border-radius:14px;padding:18px;margin-bottom:14px;}
 [data-theme="light"] .candidate-card{background:linear-gradient(135deg,#ddeeff,#e8f0ff);border-color:#b0c8f0;}
 .candidate-name{font-size:calc(var(--fs) + 4px);font-weight:700;color:var(--accent);margin-bottom:12px;}
@@ -81,6 +90,7 @@ body{
 .badge-kal{background:#2a2a1a;color:var(--yellow);border:1px solid #4a3a00}
 [data-theme="light"] .badge-aaj{background:#d1fae5;border-color:#6ee7b7;}
 [data-theme="light"] .badge-kal{background:#fef3c7;border-color:#fcd34d;}
+
 .shift-group{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;transition:background .25s;}
 .shift-header{padding:12px 16px;font-size:var(--fs);font-weight:700;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
 .shift-1st{color:#4f8ef7}.shift-2nd{color:#22c97a}.shift-3rd{color:#f5a623}.shift-rest{color:#7a8aaa}
@@ -92,6 +102,7 @@ body{
 [data-theme="light"] .emp-chip.ot{background:#dbeafe;}
 [data-theme="light"] .emp-chip.mutual{background:#ede9fe;}
 [data-theme="light"] .emp-chip.leave{background:#fef3c7;}
+
 .list-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 15px;margin-bottom:10px;transition:background .25s;}
 .list-card-row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
 .list-card-info{flex:1;min-width:0;}
@@ -107,14 +118,17 @@ body{
 [data-theme="light"] .pill-future{background:#dbeafe;}
 [data-theme="light"] .pill-applied{background:#d1fae5;}
 [data-theme="light"] .pill-approved{background:#dbeafe;}
+
 .section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
 .section-hdr-title{font-size:calc(var(--fs) - 3px);font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+
 .hist-entry{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 15px;margin-bottom:8px;display:flex;align-items:center;gap:10px;transition:background .25s;}
 .hist-icon{font-size:calc(var(--fs) + 4px);min-width:26px;text-align:center}
 .hist-main{flex:1;min-width:0;}
 .hist-name{font-size:var(--fs);font-weight:700;color:var(--text)}
 .hist-meta{font-size:calc(var(--fs) - 3px);color:var(--muted);margin-top:2px;font-family:var(--mono)}
 .hist-date-divider{font-size:calc(var(--fs) - 3px);font-weight:700;color:var(--muted);padding:10px 0 5px;letter-spacing:.5px;text-transform:uppercase;}
+
 .form-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;transition:background .25s;}
 .form-title{font-size:calc(var(--fs) + 1px);font-weight:700;color:var(--text);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
 .form-label{font-size:calc(var(--fs) - 3px);color:var(--muted);margin-bottom:7px;display:block;font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
@@ -122,12 +136,15 @@ body{
 .form-input:focus,.form-select:focus{border-color:var(--accent)}
 .form-select option{background:var(--card);}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card);border:1px solid var(--accent);color:var(--accent);padding:13px 24px;border-radius:30px;font-size:var(--fs);font-weight:600;z-index:300;transition:transform .3s;white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,.4);}
 #toast.show{transform:translateX(-50%) translateY(0)}
 #toast.error{border-color:var(--red);color:var(--red)}
+
 .loader{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--muted);font-size:var(--fs);gap:10px;}
 .spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
 .empty{text-align:center;padding:30px 20px;color:var(--muted);font-size:var(--fs);}
+
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;align-items:flex-end;justify-content:center;}
 .modal.show{display:flex}
 .modal-box{background:var(--modal-bg);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:22px 18px 36px;width:100%;max-width:480px;transition:background .25s;}
@@ -140,50 +157,59 @@ body{
 .edit-modal-body{max-height:65vh;overflow-y:scroll;}
 
 /* ── SETTINGS PANEL ── */
-.settings-panel{
-  position:fixed;top:0;right:-320px;bottom:0;width:300px;
-  background:var(--surface);border-left:1px solid var(--border);
-  z-index:400;transition:right .3s ease;padding:0;
-  display:flex;flex-direction:column;
-}
+.settings-panel{position:fixed;top:0;right:-320px;bottom:0;width:300px;background:var(--surface);border-left:1px solid var(--border);z-index:400;transition:right .3s ease;display:flex;flex-direction:column;}
 .settings-panel.open{right:0;}
-.settings-overlay{
-  display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:399;
-}
+.settings-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:399;}
 .settings-overlay.show{display:block;}
-.settings-hdr{
-  padding:20px 18px 16px;
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-}
+.settings-hdr{padding:20px 18px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
 .settings-hdr-title{font-size:18px;font-weight:700;color:var(--text);}
 .settings-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;}
 .settings-body{padding:20px 18px;flex:1;overflow-y:scroll;}
 .settings-section{margin-bottom:28px;}
 .settings-label{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;display:block;}
-/* Theme toggle */
 .theme-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.theme-btn{
-  padding:12px;border-radius:10px;font-family:var(--sans);font-size:15px;font-weight:600;
-  cursor:pointer;border:2px solid var(--border);background:var(--card);color:var(--muted);
-  transition:all .2s;
-}
+.theme-btn{padding:12px;border-radius:10px;font-family:var(--sans);font-size:15px;font-weight:600;cursor:pointer;border:2px solid var(--border);background:var(--card);color:var(--muted);transition:all .2s;}
 .theme-btn.active{border-color:var(--accent);color:var(--accent);}
-/* Font size slider */
 .font-row{display:flex;align-items:center;gap:12px;}
 .font-val{font-family:var(--mono);font-size:15px;color:var(--text);min-width:36px;text-align:center;font-weight:600;}
-input[type=range]{
-  flex:1;-webkit-appearance:none;height:4px;border-radius:2px;
-  background:var(--border);outline:none;
+input[type=range]{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--border);outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;}
+.font-preview{margin-top:12px;padding:12px;background:var(--card);border-radius:10px;border:1px solid var(--border);color:var(--muted);line-height:1.6;font-size:var(--fs);}
+
+/* ── SKELETON UI ── */
+@keyframes skeleton{
+  0%{background-position:200% 0;}
+  100%{background-position:-200% 0;}
 }
-input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none;width:20px;height:20px;border-radius:50%;
-  background:var(--accent);cursor:pointer;
+.skeleton-bar{
+  height:18px;width:60%;
+  background:linear-gradient(90deg,var(--sk1) 25%,var(--sk2) 50%,var(--sk1) 75%);
+  background-size:200% 100%;
+  animation:skeleton 1.2s infinite;
+  border-radius:6px;
 }
-.font-preview{
-  margin-top:12px;padding:12px;background:var(--card);border-radius:10px;
-  border:1px solid var(--border);color:var(--muted);line-height:1.6;
-  font-size:var(--fs);
+.skeleton-chip{
+  width:80px;height:30px;display:inline-block;border-radius:20px;
+  background:linear-gradient(90deg,var(--sk1) 25%,var(--sk2) 50%,var(--sk1) 75%);
+  background-size:200% 100%;
+  animation:skeleton 1.2s infinite;
+}
+.skeleton-chip.w50{width:50px;}
+.skeleton-chip.w100{width:100px;}
+.skeleton-line{
+  height:14px;border-radius:4px;margin-bottom:8px;
+  background:linear-gradient(90deg,var(--sk1) 25%,var(--sk2) 50%,var(--sk1) 75%);
+  background-size:200% 100%;
+  animation:skeleton 1.2s infinite;
+}
+.skeleton-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 15px;margin-bottom:10px;}
+
+/* ── SWIPE HINT ── */
+.swipe-hint{
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;padding:8px 0 0;
+  color:var(--muted);font-size:12px;opacity:.6;
+  user-select:none;pointer-events:none;
 }
 </style>
 </head>
@@ -199,7 +225,7 @@ input[type=range]::-webkit-slider-thumb{
   </div>
 </div>
 
-<div class="tabs">
+<div class="tabs" id="tabsBar">
   <div class="tab active" onclick="switchTab('dashboard')">Dashboard</div>
   <div class="tab" onclick="switchTab('today')">Today</div>
   <div class="tab" onclick="switchTab('tomorrow')">Tomorrow</div>
@@ -207,6 +233,9 @@ input[type=range]::-webkit-slider-thumb{
   <div class="tab" onclick="switchTab('leave')">Leave</div>
   <div class="tab" onclick="switchTab('mutual')">Mutual</div>
 </div>
+
+<!-- SWIPE CONTAINER wraps all sections -->
+<div id="swipeContainer">
 
 <!-- DASHBOARD -->
 <div id="tab-dashboard" class="section active">
@@ -229,17 +258,18 @@ input[type=range]::-webkit-slider-thumb{
     <button class="btn btn-refresh" onclick="loadDashboard()">🔄 Refresh</button>
     <button class="btn btn-primary" onclick="switchTab('today')">📅 Today</button>
   </div>
+  <div class="swipe-hint">← swipe to navigate tabs →</div>
 </div>
 
 <!-- TODAY -->
 <div id="tab-today" class="section">
-  <div id="todayContent"><div class="loader"><div class="spinner"></div>Loading...</div></div>
+  <div id="todayContent"></div>
   <button class="btn btn-refresh" style="width:100%;margin-top:6px" onclick="reloadToday()">🔄 Refresh</button>
 </div>
 
 <!-- TOMORROW -->
 <div id="tab-tomorrow" class="section">
-  <div id="tomorrowContent"><div class="loader"><div class="spinner"></div>Loading...</div></div>
+  <div id="tomorrowContent"></div>
   <button class="btn btn-refresh" style="width:100%;margin-top:6px" onclick="reloadTomorrow()">🔄 Refresh</button>
 </div>
 
@@ -249,7 +279,7 @@ input[type=range]::-webkit-slider-thumb{
     <span class="section-hdr-title">📊 OT History (±7 days)</span>
     <button class="btn-sm btn-edit" onclick="reloadHistory()">🔄 Refresh</button>
   </div>
-  <div id="historyContent"><div class="loader"><div class="spinner"></div>Loading...</div></div>
+  <div id="historyContent"></div>
 </div>
 
 <!-- LEAVE -->
@@ -258,7 +288,7 @@ input[type=range]::-webkit-slider-thumb{
     <span class="section-hdr-title">📋 Active & Upcoming Leaves</span>
     <button class="btn-sm btn-edit" onclick="reloadLeaves()">🔄 Refresh</button>
   </div>
-  <div id="leaveList"><div class="loader"><div class="spinner"></div>Loading...</div></div>
+  <div id="leaveList"></div>
   <div class="form-card" style="margin-top:16px">
     <div class="form-title">📝 Nayi Leave Apply Karo</div>
     <label class="form-label">Employee Name</label>
@@ -279,7 +309,7 @@ input[type=range]::-webkit-slider-thumb{
     <span class="section-hdr-title">🔄 Upcoming Mutuals</span>
     <button class="btn-sm btn-edit" onclick="reloadMutuals()">🔄 Refresh</button>
   </div>
-  <div id="mutualList"><div class="loader"><div class="spinner"></div>Loading...</div></div>
+  <div id="mutualList"></div>
   <div class="form-card" style="margin-top:16px">
     <div class="form-title">🔄 Nayi Mutual Apply Karo</div>
     <label class="form-label">Employee 1</label>
@@ -293,7 +323,9 @@ input[type=range]::-webkit-slider-thumb{
   </div>
 </div>
 
-<!-- OT CONFIRM MODAL -->
+</div><!-- /swipeContainer -->
+
+<!-- MODALS -->
 <div id="confirmModal" class="modal">
   <div class="modal-box">
     <div class="modal-title" id="modalTitle">Confirm?</div>
@@ -305,7 +337,6 @@ input[type=range]::-webkit-slider-thumb{
   </div>
 </div>
 
-<!-- DELETE MODAL -->
 <div id="deleteModal" class="modal">
   <div class="modal-box">
     <div class="modal-title">🗑️ Delete Confirm?</div>
@@ -317,7 +348,6 @@ input[type=range]::-webkit-slider-thumb{
   </div>
 </div>
 
-<!-- EDIT LEAVE MODAL -->
 <div id="editLeaveModal" class="modal">
   <div class="modal-box">
     <div class="modal-title">✏️ Leave Edit Karo</div>
@@ -339,7 +369,6 @@ input[type=range]::-webkit-slider-thumb{
   </div>
 </div>
 
-<!-- EDIT MUTUAL MODAL -->
 <div id="editMutualModal" class="modal">
   <div class="modal-box">
     <div class="modal-title">✏️ Mutual Edit Karo</div>
@@ -359,7 +388,6 @@ input[type=range]::-webkit-slider-thumb{
   </div>
 </div>
 
-<!-- SETTINGS PANEL -->
 <div class="settings-overlay" id="settingsOverlay" onclick="closeSettings()"></div>
 <div class="settings-panel" id="settingsPanel">
   <div class="settings-hdr">
@@ -367,7 +395,6 @@ input[type=range]::-webkit-slider-thumb{
     <button class="settings-close" onclick="closeSettings()">✕</button>
   </div>
   <div class="settings-body">
-
     <div class="settings-section">
       <span class="settings-label">🌓 Theme</span>
       <div class="theme-row">
@@ -375,13 +402,11 @@ input[type=range]::-webkit-slider-thumb{
         <button class="theme-btn" id="themeBtn-light" onclick="setTheme('light')">☀️ Light</button>
       </div>
     </div>
-
     <div class="settings-section">
       <span class="settings-label">🔡 Font Size</span>
       <div class="font-row">
         <span style="font-size:13px;color:var(--muted)">A</span>
-        <input type="range" id="fontSlider" min="13" max="20" step="1" value="16"
-               oninput="setFontSize(this.value)">
+        <input type="range" id="fontSlider" min="13" max="20" step="1" value="16" oninput="setFontSize(this.value)">
         <span style="font-size:19px;color:var(--muted)">A</span>
       </div>
       <div style="display:flex;justify-content:space-between;margin-top:4px;">
@@ -389,52 +414,187 @@ input[type=range]::-webkit-slider-thumb{
         <span class="font-val" id="fontVal">16px</span>
         <span style="font-size:12px;color:var(--muted)">Bada</span>
       </div>
-      <div class="font-preview" id="fontPreview">
-        ⚡ OT Dashboard preview text. Employee name, shift details.
-      </div>
+      <div class="font-preview" id="fontPreview">⚡ OT Dashboard preview text. Employee name, shift details.</div>
     </div>
-
   </div>
 </div>
 
 <div id="toast"></div>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbw0FcWamrLrAftJXgnuRktlx7HXvAnjzl0iCTUuAoOXhU0VAHCpPS_Qi-naNzCwoKP2Og/exec";
-const CACHE_KEY = "ot_cache_v3";
-const PREF_KEY  = "ot_prefs_v1";
+const API      = "https://script.google.com/macros/s/AKfycbw0FcWamrLrAftJXgnuRktlx7HXvAnjzl0iCTUuAoOXhU0VAHCpPS_Qi-naNzCwoKP2Og/exec";
+const PREF_KEY = "ot_prefs_v1";
 
+// ── TAB ORDER (for swipe) ──
+const TAB_NAMES = ['dashboard','today','tomorrow','history','leave','mutual'];
+let _activeTabIdx = 0;
 
 let _nextInfo=null, _empList=[], _activeTab='dashboard';
 let _todayLoaded=false, _tmrLoaded=false, _histLoaded=false;
 let _leaveLoaded=false, _mutualLoaded=false;
 let _isOnline=navigator.onLine;
 
-// ── PREFS ──
+// ══════════════════════════════════════════
+// INDEXEDDB CACHE
+// ══════════════════════════════════════════
+let _db = null;
+
+function initDB(){
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open('OT_DB', 1);
+    req.onupgradeneeded = e => {
+      e.target.result.createObjectStore('apiCache', { keyPath: 'key' });
+    };
+    req.onsuccess = e => { _db = e.target.result; resolve(); };
+    req.onerror   = ()  => { resolve(); }; // fallback gracefully
+  });
+}
+
+function idbSet(key, data){
+  if(!_db) return;
+  try{
+    _db.transaction('apiCache','readwrite')
+       .objectStore('apiCache')
+       .put({ key, data });
+  }catch(e){}
+}
+
+function idbGet(key){
+  return new Promise(resolve => {
+    if(!_db){ resolve(null); return; }
+    try{
+      const req = _db.transaction('apiCache','readonly')
+                     .objectStore('apiCache').get(key);
+      req.onsuccess = () => resolve(req.result?.data || null);
+      req.onerror   = () => resolve(null);
+    }catch(e){ resolve(null); }
+  });
+}
+
+// ══════════════════════════════════════════
+// API FETCH — IndexedDB cache
+// ══════════════════════════════════════════
+async function apiFetch(action, qs){
+  const url = API + '?action=' + action + (qs || '');
+  const ck  = action + (qs || '');
+  try{
+    if(!_isOnline) throw new Error('offline');
+    const r = await fetch(url).then(r => r.json());
+    idbSet(ck, r);
+    return r;
+  }catch(e){
+    const cached = await idbGet(ck);
+    if(cached) return cached;
+    throw e;
+  }
+}
+
+// ══════════════════════════════════════════
+// SKELETON FUNCTIONS
+// ══════════════════════════════════════════
+function skShiftGroup(chipCount){
+  const chips = Array.from({length: chipCount}, (_,i) =>
+    `<span class="emp-chip skeleton-chip ${i%3===0?'w100':i%3===1?'w50':''}"></span>`
+  ).join('');
+  return `<div class="shift-group">
+    <div class="shift-header"><span class="skeleton-bar"></span></div>
+    <div class="shift-body">${chips}</div>
+  </div>`;
+}
+
+function getTodaySkeleton(){
+  return skShiftGroup(4) + skShiftGroup(3) + skShiftGroup(2) + skShiftGroup(1);
+}
+
+function getTomorrowSkeleton(){
+  return `<div class="status-box">
+    <div class="skeleton-line" style="width:80%"></div>
+    <div class="skeleton-line" style="width:60%"></div>
+    <div class="skeleton-line" style="width:70%"></div>
+    <div class="skeleton-line" style="width:50%"></div>
+  </div>`;
+}
+
+function getListSkeleton(rows){
+  return Array.from({length: rows || 3}, () => `
+    <div class="skeleton-card">
+      <div class="skeleton-line" style="width:55%;margin-bottom:10px"></div>
+      <div class="skeleton-line" style="width:75%"></div>
+    </div>`).join('');
+}
+
+function getHistorySkeleton(){
+  return Array.from({length: 4}, () => `
+    <div class="hist-entry">
+      <div class="skeleton-chip w50"></div>
+      <div style="flex:1">
+        <div class="skeleton-line" style="width:60%;margin-bottom:8px"></div>
+        <div class="skeleton-line" style="width:40%"></div>
+      </div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════
+// SWIPE NAVIGATION
+// ══════════════════════════════════════════
+(function initSwipe(){
+  const el = document.getElementById('swipeContainer');
+  let startX = 0, startY = 0, moved = false;
+  const THRESHOLD = 60; // px minimum swipe
+  const ANGLE     = 35; // max vertical angle to still count as horiz swipe
+
+  el.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    moved  = false;
+  }, { passive: true });
+
+  el.addEventListener('touchmove', e => {
+    moved = true;
+  }, { passive: true });
+
+  el.addEventListener('touchend', e => {
+    if(!moved) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+
+    // Only treat as horizontal swipe if mostly horizontal
+    if(Math.abs(dx) < THRESHOLD) return;
+    if(Math.abs(dy) / Math.abs(dx) > Math.tan(ANGLE * Math.PI / 180)) return;
+
+    // Any modal open? ignore swipe
+    if(document.querySelector('.modal.show')) return;
+    // Settings open? ignore
+    if(document.getElementById('settingsPanel').classList.contains('open')) return;
+
+    const nextIdx = _activeTabIdx + (dx < 0 ? 1 : -1);
+    if(nextIdx >= 0 && nextIdx < TAB_NAMES.length){
+      switchTab(TAB_NAMES[nextIdx]);
+    }
+  }, { passive: true });
+})();
+
+// ══════════════════════════════════════════
+// PREFS
+// ══════════════════════════════════════════
 function loadPrefs(){
   try{
-    const p=JSON.parse(localStorage.getItem(PREF_KEY)||'{}');
-    if(p.theme) setTheme(p.theme,true);
-    if(p.fontSize) setFontSize(p.fontSize,true);
+    const p = JSON.parse(localStorage.getItem(PREF_KEY) || '{}');
+    if(p.theme)    setTheme(p.theme, true);
+    if(p.fontSize) setFontSize(p.fontSize, true);
   }catch(e){}
 }
 function savePrefs(){
   try{
-    const theme=document.documentElement.getAttribute('data-theme')||'dark';
-    const fs=parseInt(document.getElementById('fontSlider').value)||16;
-    localStorage.setItem(PREF_KEY,JSON.stringify({theme,fontSize:fs}));
+    const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const fs    = parseInt(document.getElementById('fontSlider').value) || 16;
+    localStorage.setItem(PREF_KEY, JSON.stringify({theme, fontSize: fs}));
   }catch(e){}
 }
 
 // ── SETTINGS ──
-function openSettings(){
-  document.getElementById('settingsPanel').classList.add('open');
-  document.getElementById('settingsOverlay').classList.add('show');
-}
-function closeSettings(){
-  document.getElementById('settingsPanel').classList.remove('open');
-  document.getElementById('settingsOverlay').classList.remove('show');
-}
+function openSettings(){ document.getElementById('settingsPanel').classList.add('open'); document.getElementById('settingsOverlay').classList.add('show'); }
+function closeSettings(){ document.getElementById('settingsPanel').classList.remove('open'); document.getElementById('settingsOverlay').classList.remove('show'); }
 function setTheme(t, noSave){
   document.documentElement.setAttribute('data-theme',t);
   document.getElementById('themeBtn-dark').classList.toggle('active',t==='dark');
@@ -452,9 +612,10 @@ function setFontSize(v, noSave){
 }
 
 // ── OFFLINE ──
-window.addEventListener('online', ()=>{ _isOnline=true; document.getElementById('offline-bar').classList.remove('show'); syncOfflineQueue(); });
-window.addEventListener('offline',()=>{ _isOnline=false; document.getElementById('offline-bar').classList.add('show'); });
+window.addEventListener('online',  ()=>{ _isOnline=true;  document.getElementById('offline-bar').classList.remove('show'); syncOfflineQueue(); });
+window.addEventListener('offline', ()=>{ _isOnline=false; document.getElementById('offline-bar').classList.add('show'); });
 if(!_isOnline) document.getElementById('offline-bar').classList.add('show');
+
 function getQ(){ try{return JSON.parse(localStorage.getItem('ot_q')||'[]');}catch(e){return[];} }
 function saveQ(q){ localStorage.setItem('ot_q',JSON.stringify(q)); }
 function addQ(item){ const q=getQ(); q.push(item); saveQ(q); }
@@ -471,75 +632,31 @@ async function syncOfflineQueue(){
   else showToast('⚠️ '+failed.length+' item sync nahi hua',true);
 }
 
-// ── CACHE ──
-function setC(key,data){ try{ const c=JSON.parse(localStorage.getItem(CACHE_KEY)||'{}'); c[key]=data; localStorage.setItem(CACHE_KEY,JSON.stringify(c)); }catch(e){} }
-function getC(key){ try{ return JSON.parse(localStorage.getItem(CACHE_KEY)||'{}')[key]||null; }catch(e){return null;} }
-async function apiFetch(action, qs){
-  const url=API+'?action='+action+(qs||'');
-  const ck=action+(qs||'');
-  try{
-    if(!_isOnline) throw new Error('offline');
-    const r=await fetch(url).then(r=>r.json());
-    setC(ck,r); return r;
-  }catch(e){
-    const cached=getC(ck);
-    if(cached) return cached;
-    throw e;
-  }
-}
-
 // ── CLOCK ──
 function tick(){const n=new Date();document.getElementById('clock').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
 setInterval(tick,1000);tick();
 
-// ── TABS ──
+// ── TAB SWITCH ──
 function switchTab(name){
-  _activeTab=name;
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['dashboard','today','tomorrow','history','leave','mutual'][i]===name));
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  _activeTab = name;
+  _activeTabIdx = TAB_NAMES.indexOf(name);
+
+  document.querySelectorAll('.tab').forEach((t,i)=>
+    t.classList.toggle('active', TAB_NAMES[i] === name)
+  );
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  if(name==='today'&&!_todayLoaded)loadToday();
-  if(name==='tomorrow'&&!_tmrLoaded)loadTomorrow();
-  if(name==='history'&&!_histLoaded)loadHistory();
-  if(name==='leave'&&!_leaveLoaded)loadLeaves();
-  if(name==='mutual'&&!_mutualLoaded)loadMutuals();
- 
 
-}
-  function preloadAllTabs(){
+  // Scroll active tab into view
+  const activeTab = document.querySelector('.tab.active');
+  if(activeTab) activeTab.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
 
-  const loaders=[
-
-    ()=>loadToday(),
-
-    ()=>loadTomorrow(),
-
-    ()=>loadHistory(),
-
-    ()=>loadLeaves(),
-
-    ()=>loadMutuals()
-
-  ];
-
-  let i=0;
-
-  function next(){
-
-    if(i>=loaders.length)
-      return;
-
-    loaders[i++]();
-
-    setTimeout(
-      next,
-      600
-    );
-
-  }
-
-  next();
-
+  // Load if not yet loaded
+  if(name==='today'    && !_todayLoaded)  loadToday();
+  if(name==='tomorrow' && !_tmrLoaded)    loadTomorrow();
+  if(name==='history'  && !_histLoaded)   loadHistory();
+  if(name==='leave'    && !_leaveLoaded)  loadLeaves();
+  if(name==='mutual'   && !_mutualLoaded) loadMutuals();
 }
 
 // ── TOAST ──
@@ -587,7 +704,7 @@ async function loadDashboard(){
 // ── TODAY ──
 async function loadToday(){
   _todayLoaded=true;
-  document.getElementById('todayContent').innerHTML='<div class="loader"><div class="spinner"></div>Loading...</div>';
+  document.getElementById('todayContent').innerHTML=getTodaySkeleton();
   try{
     const res=await apiFetch('todayWeb');
     if(!res.ok||!res.shifts)throw new Error();
@@ -606,7 +723,7 @@ function reloadToday(){_todayLoaded=false;loadToday();}
 // ── TOMORROW ──
 async function loadTomorrow(){
   _tmrLoaded=true;
-  document.getElementById('tomorrowContent').innerHTML='<div class="loader"><div class="spinner"></div>Loading...</div>';
+  document.getElementById('tomorrowContent').innerHTML=getTomorrowSkeleton();
   try{
     const res=await apiFetch('tomorrowWeb');
     if(!res.ok)throw new Error();
@@ -618,7 +735,7 @@ function reloadTomorrow(){_tmrLoaded=false;loadTomorrow();}
 // ── HISTORY ──
 async function loadHistory(){
   _histLoaded=true;
-  document.getElementById('historyContent').innerHTML='<div class="loader"><div class="spinner"></div>Loading...</div>';
+  document.getElementById('historyContent').innerHTML=getHistorySkeleton();
   try{
     const res=await apiFetch('historyWeb');
     if(!res.ok||!res.records.length){document.getElementById('historyContent').innerHTML='<div class="empty">📭 Koi OT record nahi (±7 days)</div>';return;}
@@ -641,7 +758,7 @@ function reloadHistory(){_histLoaded=false;loadHistory();}
 // ── LEAVE LIST ──
 async function loadLeaves(){
   _leaveLoaded=true;
-  document.getElementById('leaveList').innerHTML='<div class="loader"><div class="spinner"></div>Loading...</div>';
+  document.getElementById('leaveList').innerHTML=getListSkeleton(3);
   try{
     const res=await apiFetch('getLeaves');
     if(!res.ok||!res.leaves||!res.leaves.length){
@@ -670,7 +787,7 @@ function reloadLeaves(){_leaveLoaded=false;loadLeaves();}
 // ── MUTUAL LIST ──
 async function loadMutuals(){
   _mutualLoaded=true;
-  document.getElementById('mutualList').innerHTML='<div class="loader"><div class="spinner"></div>Loading...</div>';
+  document.getElementById('mutualList').innerHTML=getListSkeleton(2);
   try{
     const res=await apiFetch('getMutuals');
     if(!res.ok||!res.mutuals||!res.mutuals.length){
@@ -865,75 +982,35 @@ function setDefaultDates(){
   ['leaveFrom','leaveTo','mutualDate'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=t;});
 }
 
-
-  // ── ULTRA SMOOTH BACKGROUND PRELOAD ──
-
-  function startBackgroundPreload(){
-
-  const tasks=[
-    ()=>{ if(!_todayLoaded){loadToday();_todayLoaded=true;} },
-    ()=>{ if(!_tmrLoaded){loadTomorrow();_tmrLoaded=true;} },
-    ()=>{ if(!_histLoaded){loadHistory();_histLoaded=true;} },
-    ()=>{ if(!_leaveLoaded){loadLeaves();_leaveLoaded=true;} },
-    ()=>{ if(!_mutualLoaded){loadMutuals();_mutualLoaded=true;} }
+// ── BACKGROUND PRELOAD — staggered so API not hammered ──
+function startBackgroundPreload(){
+  const tasks = [
+    { fn: loadToday,    flag: ()=>_todayLoaded,   set: ()=>_todayLoaded=true   },
+    { fn: loadTomorrow, flag: ()=>_tmrLoaded,     set: ()=>_tmrLoaded=true     },
+    { fn: loadHistory,  flag: ()=>_histLoaded,    set: ()=>_histLoaded=true    },
+    { fn: loadLeaves,   flag: ()=>_leaveLoaded,   set: ()=>_leaveLoaded=true   },
+    { fn: loadMutuals,  flag: ()=>_mutualLoaded,  set: ()=>_mutualLoaded=true  },
   ];
-
-  let delay=400;
-
-  tasks.forEach(fn=>{
-    setTimeout(fn,delay);
-    delay+=600;
+  let delay = 800;
+  tasks.forEach(task => {
+    setTimeout(() => {
+      if(!task.flag()){ task.set(); task.fn(); }
+    }, delay);
+    delay += 700;
   });
-
 }
-  async function warmCache(){
 
-  if(!_isOnline)
-    return;
-
-  try{
-
-    await Promise.all([
-
-      apiFetch('todayWeb'),
-
-      apiFetch('tomorrowWeb'),
-
-      apiFetch('historyWeb'),
-
-      apiFetch('getLeaves'),
-
-      apiFetch('getMutuals')
-
-    ]);
-
-  }
-  catch(e){}
-
-}
 // ── INIT ──
-
 loadPrefs();
-
-loadDashboard();
-loadEmployees();
 setDefaultDates();
 
-if(_isOnline)
-  syncOfflineQueue();
-
-// background preload
-setTimeout(()=>{
-  preloadAllTabs();
-},800);
-
-
-// ⭐ warm cache later
-setTimeout(()=>{
-
-  warmCache();
-
-},3000);
+initDB().then(() => {
+  loadDashboard();
+  loadEmployees();
+  if(_isOnline) syncOfflineQueue();
+  // Start background preload after dashboard settles
+  setTimeout(startBackgroundPreload, 1200);
+});
 </script>
 </body>
 </html>
