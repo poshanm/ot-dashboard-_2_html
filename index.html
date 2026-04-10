@@ -507,6 +507,41 @@ function switchTab(name){
   localStorage.setItem(LAST_TAB_KEY,name);
 
 }
+  function preloadAllTabs(){
+
+  const loaders=[
+
+    ()=>loadToday(),
+
+    ()=>loadTomorrow(),
+
+    ()=>loadHistory(),
+
+    ()=>loadLeaves(),
+
+    ()=>loadMutuals()
+
+  ];
+
+  let i=0;
+
+  function next(){
+
+    if(i>=loaders.length)
+      return;
+
+    loaders[i++]();
+
+    setTimeout(
+      next,
+      600
+    );
+
+  }
+
+  next();
+
+}
 function restoreLastTab(){
   const last =
     localStorage.getItem(LAST_TAB_KEY) || 'dashboard';
@@ -857,25 +892,29 @@ function setDefaultDates(){
   });
 
 }
-  async function warmUpCache(){
+  async function warmCache(){
 
-  if(!_isOnline) return;
+  if(!_isOnline)
+    return;
 
   try{
 
     await Promise.all([
+
       apiFetch('todayWeb'),
+
       apiFetch('tomorrowWeb'),
+
       apiFetch('historyWeb'),
+
       apiFetch('getLeaves'),
+
       apiFetch('getMutuals')
+
     ]);
 
-    console.log("Cache warmed");
-
-  }catch(e){
-    console.log("Warmup skipped");
   }
+  catch(e){}
 
 }
   // ── INIT ──
@@ -883,26 +922,37 @@ function setDefaultDates(){
 loadPrefs();
 
 loadDashboard();
+
 loadEmployees();
+
 setDefaultDates();
 
-// ⭐ Restore last tab
-restoreLastTab();
-
-// ⭐ Load cached data instantly
-loadFromCacheFirst();
-
-// ⭐ Background preload
-startBackgroundPreload();
-
-// ⭐ Warm cache
-setTimeout(()=>{
-  warmUpCache();
-},2500);
-
-// Offline sync
 if(_isOnline)
   syncOfflineQueue();
+
+
+// ⭐ restore tab first
+setTimeout(()=>{
+
+  restoreLastTab();
+
+},100);
+
+
+// ⭐ preload background
+setTimeout(()=>{
+
+  preloadAllTabs();
+
+},800);
+
+
+// ⭐ warm cache later
+setTimeout(()=>{
+
+  warmCache();
+
+},3000);
 </script>
 </body>
 </html>
