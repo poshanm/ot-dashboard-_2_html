@@ -833,6 +833,51 @@ loadDashboard();
 loadEmployees();
 setDefaultDates();
 if(_isOnline)syncOfflineQueue();
+
+  // ── ULTRA SMOOTH BACKGROUND PRELOAD ──
+function startBackgroundPreload(){
+
+  // Today (after 300ms)
+  setTimeout(()=>{
+    if(!_todayLoaded){
+      loadToday();
+      _todayLoaded=true;
+    }
+  },300);
+
+  // Tomorrow (after 700ms)
+  setTimeout(()=>{
+    if(!_tmrLoaded){
+      loadTomorrow();
+      _tmrLoaded=true;
+    }
+  },700);
+
+  // History (after 1200ms)
+  setTimeout(()=>{
+    if(!_histLoaded){
+      loadHistory();
+      _histLoaded=true;
+    }
+  },1200);
+
+  // Leaves (after 1700ms)
+  setTimeout(()=>{
+    if(!_leaveLoaded){
+      loadLeaves();
+      _leaveLoaded=true;
+    }
+  },1700);
+
+  // Mutuals (after 2200ms)
+  setTimeout(()=>{
+    if(!_mutualLoaded){
+      loadMutuals();
+      _mutualLoaded=true;
+    }
+  },2200);
+
+}
 </script>
 </body>
 </html>
